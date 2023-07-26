@@ -102,13 +102,13 @@ class Messages(models.Model):
     # Unique ID for this message
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
 
-    sender=models.ForeignKey('MyUser')
+    sender=models.ForeignKey('MyUser', on_delete=models.SET_NULL, null=True, related_name='sender')
 
-    receiver=models.ForeignKey('MyUser')
+    receiver=models.ForeignKey('MyUser', on_delete=models.SET_NULL, null=True, related_name='receiver')
 
-    room_id=models.ForeignKey('Room')
+    room_id=models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
 
-    previous_message=models.ForeignKey('Messages')
+    previous_message=models.ForeignKey('Messages', on_delete=models.SET_NULL, null=True)
     
     # ---- Methods ----
     
@@ -119,9 +119,9 @@ class Rent(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
 
-    renter=models.ForeignKey('MyUser')
+    renter=models.ForeignKey('MyUser', on_delete=models.SET_NULL, null=True)
 
-    room_id=models.ForeignKey('Room')
+    room_id=models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
 
     date_start=models.DateField()
 
