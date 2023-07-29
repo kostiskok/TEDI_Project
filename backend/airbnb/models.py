@@ -3,7 +3,8 @@ from django.db import models
 from django.urls import reverse # Used to generenate URLs by reversing the URL patterns
 import uuid # Required for unique room instances
 
-from django.contrib.auth.models import User
+from django.conf import settings
+
 
 # Create your models here.
 
@@ -25,7 +26,7 @@ class Room(models.Model):
     desc = models.TextField() # Description of the room
     
     # An owner can have multiple rooms, but each room has only one owner
-    owner = models.ForeignKey('MyUser', on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     # Coordinates for the map
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
@@ -81,7 +82,9 @@ class Review(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     
     # An user can have multiple reviews, but each review has only one user
-    user = models.ForeignKey('MyUser', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    
+    room = models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
     
     score = models.IntegerField()
     review_text = models.TextField()
@@ -91,24 +94,24 @@ class Review(models.Model):
     # ---- Methods ----
     
     def __str__(self):
-        return self.id
+        return 'Review ' + str(self.id)
 
     def get_absolute_url(self):
         """Returns the URL to access a particular instance of the review."""
         return reverse('review', args=[str(self.id)])
 
-class Messages(models.Model):
+class Message(models.Model):
 
     # Unique ID for this message
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
 
-    sender=models.ForeignKey('MyUser')
+    # sender=models.ForeignKey('MyUser')
 
-    receiver=models.ForeignKey('MyUser')
+    # receiver=models.ForeignKey('MyUser')
 
-    room_id=models.ForeignKey('Room')
+    room_id=models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
 
-    previous_message=models.ForeignKey('Messages')
+    previous_message=models.ForeignKey('Message', on_delete=models.SET_NULL, null=True)
     
     # ---- Methods ----
     
@@ -119,16 +122,10 @@ class Rent(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
 
-    renter=models.ForeignKey('MyUser')
+    # renter=models.ForeignKey('MyUser')
 
-    room_id=models.ForeignKey('Room')
+    room_id=models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
 
     date_start=models.DateField()
 
     date_end=models.DateField()
-    
-class MyUser(User):
-
-    phone = models.CharField(max_length=10)
-
-    #photo = models.ImageField()
