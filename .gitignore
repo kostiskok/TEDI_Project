@@ -1,3 +1,4 @@
 *.pyc
 backend/airbnb/migrations
 backend/users/migrations
+env/pyvenv.cfg
