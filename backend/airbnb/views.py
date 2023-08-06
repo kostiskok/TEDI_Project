@@ -1,11 +1,12 @@
-from django.shortcuts import render, HttpResponse
-from django.http import JsonResponse
-from rest_framework.parsers import JSONParser
-
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Test
 from .serializers import TestSerializer
+from .serializers import UserSerializer
+
+from users.models import CustomUser
 
 # Create your views here.
 
@@ -13,6 +14,13 @@ from .serializers import TestSerializer
 class TestViewSet(viewsets.ModelViewSet):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    
 
 # -----------------------------------------------
 # Alternate ways for the views:

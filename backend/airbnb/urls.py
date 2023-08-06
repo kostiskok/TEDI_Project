@@ -3,10 +3,13 @@ from django.urls import path, include
 # from .views import test_list, test_details
 # from .views import TestList, TestDetails
 from .views import TestViewSet
+from .views import UserViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('tests', TestViewSet, basename='tests')
+
+router.register('users', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)) 
