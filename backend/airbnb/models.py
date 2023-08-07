@@ -104,7 +104,7 @@ class Message(models.Model):
 
     # Unique ID for this message
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-
+    
     # sender=models.ForeignKey('MyUser')
 
     # receiver=models.ForeignKey('MyUser')
