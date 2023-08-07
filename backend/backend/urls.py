@@ -22,3 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('airbnb.urls')),
     path('auth/', obtain_auth_token)
+]
