@@ -11,7 +11,8 @@ class Name extends Component {
 
     clickedme(){
         this.setState({
-            name: "Changed Text"
+            // name: "Changed Text"
+            name: this.state.name === "Kostis" ? "Yes" : "Kostis"
         })
     }
 
