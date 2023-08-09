@@ -8,11 +8,10 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('tests', TestViewSet, basename='tests')
-
 router.register('users', UserViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)) 
+    path('airbnb/', include(router.urls)) 
 ]
 
 # For alternate views, urlpatterns may be:

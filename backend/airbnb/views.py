@@ -20,7 +20,6 @@ class TestViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    
 
 # -----------------------------------------------
 # Alternate ways for the views:

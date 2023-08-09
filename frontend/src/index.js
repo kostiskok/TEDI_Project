@@ -6,17 +6,25 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Route, Routes, BrowserRouter} from 'react-router-dom';
 // import Form from './components/Form';
+import Login from './components/Login';
+import {CookiesProvider} from 'react-cookie';
 
 function Router() {
 
   return(
 
+    <CookiesProvider>
+
     <BrowserRouter>
       <Routes>
-        <Route exact path = '/' element = {<App />}/>
+        {/* <Route exact path = '/' element = {<App />}/> */}
+        <Route exact path = '/' element = {<Login />}/>
+        <Route exact path = '/articles' element = {<App />}/>
         {/* <Route exact path = '/login' element = {<Form />}/> */}
       </Routes>
     </BrowserRouter>
+
+    </CookiesProvider>
 
   )
 
