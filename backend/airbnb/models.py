@@ -5,25 +5,15 @@ import uuid # Required for unique room instances
 
 from django.conf import settings
 
-
 # Create your models here.
-
-# class Todo(models.Model):
-#     title = models.CharField(max_length=120)
-#     description = models.TextField()
-#     completed = models.BooleanField(default=False)
-
-#     def _str_(self):
-#         return self.title
 
 class Room(models.Model):
     # Model representing a Room for rent
 
-    # Unique ID for this room
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-
     name = models.CharField(max_length=100) # Name of the room
     desc = models.TextField() # Description of the room
+    
+    photo = models.ImageField(upload_to='uploads/rooms', default='uploads/default_room.jpg')
     
     # An owner can have multiple rooms, but each room has only one owner
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -32,7 +22,7 @@ class Room(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     address = models.CharField(max_length = 100)
-    # info access
+    transportation = models.CharField(max_length = 100)
 
     # Dates for rent: available between dates date_start and date_end
     date_start = models.DateField()
@@ -41,7 +31,8 @@ class Room(models.Model):
     price_per_day = models.IntegerField() # How much it cost per day (min cose)
     price_per_person = models.IntegerField() # ...and how much extra each guest pays
     max_num_people = models.IntegerField() # Guest capacity
-
+    
+    rules = models.CharField(max_length = 100)
     num_of_beds = models.IntegerField()
     num_of_bedrooms = models.IntegerField()
     num_of_bathrooms = models.IntegerField()
@@ -70,16 +61,9 @@ class Room(models.Model):
     
     def __str__(self):
         return self.name
-
-    def get_absolute_url(self):
-        """Returns the URL to access a particular instance of the room."""
-        return reverse('room', args=[str(self.id)])
     
 class Review(models.Model):
     # Model representing a Review for a room
-
-    # Unique ID for this review
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     
     # An user can have multiple reviews, but each review has only one user
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -96,22 +80,17 @@ class Review(models.Model):
     def __str__(self):
         return 'Review ' + str(self.id)
 
-    def get_absolute_url(self):
-        """Returns the URL to access a particular instance of the review."""
-        return reverse('review', args=[str(self.id)])
-
 class Message(models.Model):
-
-    # Unique ID for this message
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     
-    # sender=models.ForeignKey('MyUser')
+    renter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='renter')
+ 
+    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='host')
 
-    # receiver=models.ForeignKey('MyUser')
-
-    room_id=models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
+    message_text = models.TextField(max_length=500)
 
     previous_message=models.ForeignKey('Message', on_delete=models.SET_NULL, null=True)
+    
+    date = models.DateField()
     
     # ---- Methods ----
     
@@ -120,9 +99,7 @@ class Message(models.Model):
     
 class Rent(models.Model):
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-
-    # renter=models.ForeignKey('MyUser')
+    renter=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     room_id=models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
 
@@ -139,3 +116,13 @@ class Test(models.Model):
     
     def __str__(self):
         return self.title
+    
+class Image(models.Model):
+    
+    room = models.ForeignKey('Room', on_delete=models.SET_NULL, null=True)
+
+    image = models.ImageField(null=False, blank=False)
+    description = models.TextField(max_length=100, null=False)
+
+    def str(self):
+        return self.id
