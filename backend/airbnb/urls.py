@@ -2,14 +2,21 @@ from django.urls import path, include
 # from .views import Index
 # from .views import test_list, test_details
 # from .views import TestList, TestDetails
-from .views import TestViewSet
-from .views import UserViewSet
+from .views import *
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('tests', TestViewSet, basename='tests')
 
 router.register('users', UserViewSet)
+
+router.register('rooms', RoomViewSet)
+
+router.register('reviews', ReviewViewSet)
+
+router.register('messages', MessageViewSet)
+
+router.register('rents', RentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)) 

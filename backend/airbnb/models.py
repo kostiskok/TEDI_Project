@@ -129,6 +129,9 @@ class Rent(models.Model):
     date_start=models.DateField()
 
     date_end=models.DateField()
+
+    def __str__(self):
+        return self.id
     
 class Test(models.Model):
     title = models.CharField(max_length=100)
