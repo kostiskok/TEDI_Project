@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import Todo
-from .models import Test
+from .models import *
 
 from users.models import CustomUser
 
@@ -28,6 +28,29 @@ class UserSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create_user(**validated_data)
         Token.objects.create(user=user)
         return user
+    
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields=['id','name','desc','owner','longitude','latitude','address','date_start','date_end','price_per_day','price_per_person','max_num_people','num_of_beds','num_of_bedrooms',
+                'num_of_bathrooms','room_type','area','living_room','wifi','air_condition','heating','stove','television','parking','elevator']
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields=['id','user','room','score','review_text','date']
+        
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields=['id','room_id','previous_message']
+        
+class RentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rent
+        fields=['id','room_id','date_start','date_end']
+        
+
 
 # # Using serializers.Serializer
 # class TestSerializer(serializers.Serializer):

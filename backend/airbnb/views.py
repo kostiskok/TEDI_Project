@@ -2,9 +2,10 @@ from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Test
-from .serializers import TestSerializer
-from .serializers import UserSerializer
+from .models import *
+from .serializers import *
+# from .serializers import TestSerializer
+# from .serializers import UserSerializer
 
 from users.models import CustomUser
 
@@ -20,6 +21,22 @@ class TestViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
+
+class RoomViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+
+class RentViewSet(viewsets.ModelViewSet):
+    queryset = Rent.objects.all()
+    serializer_class = RentSerializer
 
 # -----------------------------------------------
 # Alternate ways for the views:
