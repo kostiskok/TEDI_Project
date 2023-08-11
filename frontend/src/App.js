@@ -1,21 +1,18 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-
-import Hello from './components/Hello';
-import MyClass from './components/MyClass';
-import Name from './components/Name';
+import {useState, useEffect} from 'react';
+// import ArticleList from './components/ArticleList';
+// import Form from './components/Form';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
 
-  function dontclick(){
-    alert("Why did you click?");
-  }
-
   return (
-    <div className="container">
-      {/* <Hello name = "Airbnb"/>
-      <MyClass test="Airbnb" myclick={dontclick}/> */}
-      <Name/>
+    <div className='App'>
+
+      <p>Test</p>
+
     </div>
   );
 }

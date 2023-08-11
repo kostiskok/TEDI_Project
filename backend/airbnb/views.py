@@ -37,7 +37,6 @@ class MessageViewSet(viewsets.ModelViewSet):
 class RentViewSet(viewsets.ModelViewSet):
     queryset = Rent.objects.all()
     serializer_class = RentSerializer
-    
 
 # -----------------------------------------------
 # Alternate ways for the views:
