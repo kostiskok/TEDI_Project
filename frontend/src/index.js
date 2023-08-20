@@ -5,9 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Route, Routes, BrowserRouter} from 'react-router-dom';
-// import Form from './components/Form';
-// import Login from './components/Login';
 import {CookiesProvider} from 'react-cookie';
+
+import Register from './components/Register';
+import Header from './components/Header';
+import Rooms from './components/Rooms';
 
 function Router() {
 
@@ -15,13 +17,13 @@ function Router() {
 
     <CookiesProvider>
 
+    <Header/>
+
     <BrowserRouter>
       <Routes>
-        {/* <Route exact path = '/' element = {<App />}/> */}
-        {/* <Route exact path = '/' element = {<Login />}/> */}
-        {/* <Route exact path = '/articles' element = {<App />}/> */}
         <Route exact path = '/' element = {<App />}/>
-        {/* <Route exact path = '/login' element = {<Form />}/> */}
+        <Route exact path = '/register/' element = {<Register />}/>
+        <Route exact path = '/rooms/' element = {<Rooms />}/>
       </Routes>
     </BrowserRouter>
 
