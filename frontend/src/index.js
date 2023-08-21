@@ -8,8 +8,10 @@ import {Route, Routes, BrowserRouter} from 'react-router-dom';
 import {CookiesProvider} from 'react-cookie';
 
 import Register from './components/Register';
+import Profile from './components/Profile';
 import Header from './components/Header';
 import Rooms from './components/Rooms';
+import Room from './components/Room';
 
 function Router() {
 
@@ -23,7 +25,9 @@ function Router() {
       <Routes>
         <Route exact path = '/' element = {<App />}/>
         <Route exact path = '/register/' element = {<Register />}/>
+        <Route exact path = '/profile/' element = {<Profile />}/>
         <Route exact path = '/rooms/' element = {<Rooms />}/>
+        <Route exact path = '/rooms/:id' element = {<Room />}/>
       </Routes>
     </BrowserRouter>
 
