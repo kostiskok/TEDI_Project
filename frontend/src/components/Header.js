@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { useCookies } from "react-cookie";
+import { Link } from 'react-router-dom';
 
 import APIService from "../APIService";
 
@@ -38,16 +39,16 @@ function Header() {
     <div className="bg-primary">
         <nav className="nav nav-pills flex-column flex-sm-row align-items-center" style={{height: "60px"}}>
             <div className="d-flex justify-content-start">
-                <a className="nav-link text-white " href="/">AirBnb</a>
+                <Link to="/" className="nav-link text-white">Airbnb</Link>
             </div>
             <div className="d-flex justify-content-start flex-sm-fill">
-                <a className="nav-link text-white flex-sm-fill" href="/rooms/">Rooms</a>
+                <Link to="/rooms/" className="nav-link text-white flex-sm-fill">Rooms</Link>
             </div>
 
     { isLogged 
         ? 
             <div className="d-flex justify-content-end">
-                <a className="nav-link text-white" href="/profile/">My Profile</a>
+                <Link to="/profile/" className="nav-link text-white">My Profile</Link>
                 <button onClick={logoutBtn} className="btn btn-danger" id="logout">Logout</button>
             </div>
         :
@@ -57,7 +58,7 @@ function Header() {
                 <input type='password' className="form-control" id='password' placeholder="Password"
                 value = {password} onChange={e => setPassword(e.target.value)}/>
                 <button onClick={loginBtn} className="btn btn-success" id="login">Login</button>
-                <a className="nav-link text-white flex-sm-fill" href="/register/">Register</a>
+                <Link to="/register/" className="nav-link text-white flex-sm-fill">Register</Link>
             </div>
     }
 

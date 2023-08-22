@@ -19,9 +19,9 @@ function Router() {
 
     <CookiesProvider>
 
-    <Header/>
-
     <BrowserRouter>
+      <Header/>
+
       <Routes>
         <Route exact path = '/' element = {<App />}/>
         <Route exact path = '/register/' element = {<Register />}/>
