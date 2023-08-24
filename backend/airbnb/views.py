@@ -22,6 +22,16 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
+class UserStatusViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserStatusSerializer
+    
+    permission_classes = [IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(id=self.request.user.id)
+
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer

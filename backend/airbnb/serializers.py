@@ -39,6 +39,16 @@ class UserSerializer(serializers.ModelSerializer):
         Token.objects.create(user=user)
         return user
     
+class UserStatusSerializer(serializers.ModelSerializer):
+    isAdmin = serializers.SerializerMethodField('get_is_staff')
+    
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'isAdmin', 'isRenter', 'isHost', 'waitingHost']
+    
+    def get_is_staff(self, obj):
+        return obj.is_staff
+    
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room

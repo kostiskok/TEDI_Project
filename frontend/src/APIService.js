@@ -21,4 +21,14 @@ export default class APIService{
         }).then(resp => resp.json())
     }
 
+    static userStatus(token){
+        return fetch('http://127.0.0.1:8000/airbnb/status/', {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+                'Authorization':`Token ${token}`,
+            }
+        }).then(resp => resp.json())
+    }
+
 }

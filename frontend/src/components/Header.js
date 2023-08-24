@@ -9,8 +9,13 @@ function Header() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [token, setToken, removeToken] = useCookies(['mytoken'])
+    const [status, setStatus, removeStatus] = useCookies(['status'])
 
     const [isLogged, setLogged] = useState(false)
+    const [isAdmin, setAdmin] = useState(false)
+    const [isHost, setHost] = useState(false)
+    const [isRenter, setRenter] = useState(false)
+    const [waitingHost, setWaitingHost] = useState(false)
 
     // Login
     const loginBtn = () => {
@@ -22,17 +27,62 @@ function Header() {
     // Logout
     const logoutBtn = () => {
         removeToken(['mytoken'])
+        removeStatus(['status'])
     }
 
-    // Change the var isLogged when the user logs
+    /*
+    * When a user logs in:
+    * 1. Change the setLogged variable to True -> for more straightforward use later
+    * 2. Add another cookie, status, which informs us if the user is an Admin, Host or Renter
+    **/
     useEffect(() => {
         if(token['mytoken']){
             setLogged(true)
+
+            APIService.userStatus(token['mytoken'])
+            .then(resp => resp[0] ? setStatus('status', resp[0]) : console.log('There was an error with the status retrieval'))
+            .catch(error => console.log(error))
         }
         else{
             setLogged(false)
         }
     }, [token])
+
+    // Set the status variables of the fields
+    useEffect(() => {
+        if(status['status']){
+            setAdmin(status['status'].isAdmin)
+            setHost(status['status'].isHost)
+            setRenter(status['status'].isRenter)
+            setWaitingHost(status['status'].waitingHost)
+        }
+        else{
+            setAdmin(false)
+            setHost(false)
+            setRenter(false)
+            setWaitingHost(false)
+        }
+    }, [status])
+
+    const statusAdditionalLinks = () => {
+
+        return (
+            <div>
+                {isAdmin 
+                    ? <Link to="/admin/" className="nav-link text-white flex-sm-fill"><b>Admin Menu</b></Link>
+                    : null
+                }
+                {isHost 
+                    ? <Link to="/host/" className="nav-link text-white flex-sm-fill"><b>Host Menu</b></Link>
+                    : null
+                }
+                {waitingHost 
+                    ? <div className="nav-link text-white flex-sm-fill"><b>Awaiting Host Approval</b></div>
+                    : null
+                }
+            </div>
+        )
+    }
 
   return(
 
@@ -46,8 +96,9 @@ function Header() {
             </div>
 
     { isLogged 
-        ? 
+        ?   
             <div className="d-flex justify-content-end">
+                {statusAdditionalLinks()}
                 <Link to="/profile/" className="nav-link text-white">My Profile</Link>
                 <button onClick={logoutBtn} className="btn btn-danger" id="logout">Logout</button>
             </div>
@@ -63,6 +114,7 @@ function Header() {
     }
 
         </nav>
+        
     </div>
 
     );

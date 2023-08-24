@@ -1,7 +1,21 @@
 import React, {useState, useEffect} from "react";
+import { useCookies } from 'react-cookie';
+import { useNavigate } from "react-router-dom";
+
 import APIService from "../APIService";
 
 function Register() {
+
+    /*
+    * When a user is already logged in, just redirect him to the main page
+    **/
+    const [token, setToken] = useCookies(['mytoken'])
+    let navigate = useNavigate()
+    useEffect(() => {
+        if(token['mytoken']){
+            navigate('/')
+        }
+      }, [token])
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')

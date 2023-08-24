@@ -17,6 +17,8 @@ router.register('messages', MessageViewSet)
 
 router.register('rents', RentViewSet)
 
+router.register('status', UserStatusViewSet)
+
 urlpatterns = [
     path('airbnb/', include(router.urls)) 
 ]
