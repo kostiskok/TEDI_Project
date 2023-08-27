@@ -21,12 +21,41 @@ export default class APIService{
         }).then(resp => resp.json())
     }
 
-    static userStatus(token){
-        return fetch('http://127.0.0.1:8000/airbnb/status/', {
+    static getUsers(){
+        return fetch('http://127.0.0.1:8000/airbnb/users', {
             'method': 'GET',
             headers: {
                 'Content-Type':'application/json',
-                'Authorization':`Token ${token}`,
+            }
+        }).then(resp => resp.json())
+    }
+
+    static getUser(id){
+        return fetch(`http://127.0.0.1:8000/airbnb/users/${id}`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
+    static getRooms(page, type, maxcost, lr, wifi, ac, heating, stove, tv, parking, elevator){
+
+        var typeFilter = (type != "") ? `&type=${type}` : ""
+        var maxCostFilter = (maxcost) ? `&maxcost=${maxcost}` : ""
+        var lrFilter = (lr) ? "&lr" : ""
+        var wifiFilter = (wifi) ? "&wifi" : ""
+        var acFilter = (ac) ? "&ac" : ""
+        var heatingFilter = (heating) ? "&heating" : ""
+        var stoveFilter = (stove) ? "&stove" : ""
+        var tvFilter = (tv) ? "&tv" : ""
+        var parkingFilter = (parking) ? "&parking" : ""
+        var elevatorFilter = (elevator) ? "&elevator" : ""
+
+        return fetch(`http://127.0.0.1:8000/airbnb/rooms/?page=${page}${typeFilter}${maxCostFilter}${lrFilter}${wifiFilter}${acFilter}${heatingFilter}${stoveFilter}${tvFilter}${parkingFilter}${elevatorFilter}`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
             }
         }).then(resp => resp.json())
     }

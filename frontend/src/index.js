@@ -14,6 +14,8 @@ import Rooms from './components/Rooms';
 import Room from './components/Room';
 import AdminMenu from './components/AdminMenu';
 import HostMenu from './components/HostMenu';
+import HostCreate from './components/HostCreate';
+import HostEdit from './components/HostEdit';
 
 function Router() {
 
@@ -26,12 +28,17 @@ function Router() {
 
       <Routes>
         <Route exact path = '/' element = {<App />}/>
-        <Route exact path = '/register/' element = {<Register />}/>
-        <Route exact path = '/profile/' element = {<Profile />}/>
         <Route exact path = '/rooms/' element = {<Rooms />}/>
         <Route exact path = '/rooms/:id/' element = {<Room />}/>
+
+        <Route exact path = '/register/' element = {<Register />}/>
+        <Route exact path = '/profile/' element = {<Profile />}/>
+        
         <Route exact path = '/admin/' element = {<AdminMenu />}/>
+        
         <Route exact path = '/host/' element = {<HostMenu />}/>
+        <Route exact path = '/host/create/' element = {<HostCreate />}/>
+        <Route exact path = '/host/:id/' element = {<HostEdit />}/>
       </Routes>
     </BrowserRouter>
 

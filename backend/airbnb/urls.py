@@ -6,10 +6,11 @@ from .views import *
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('tests', TestViewSet, basename='tests')
+# router.register('tests', TestViewSet, basename='tests')
 router.register('users', UserViewSet)
 
 router.register('rooms', RoomViewSet)
+router.register('roomhost', RoomHostViewSet)
 
 router.register('reviews', ReviewViewSet)
 
@@ -17,7 +18,7 @@ router.register('messages', MessageViewSet)
 
 router.register('rents', RentViewSet)
 
-router.register('status', UserStatusViewSet)
+
 
 urlpatterns = [
     path('airbnb/', include(router.urls)) 

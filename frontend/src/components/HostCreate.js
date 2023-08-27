@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate, Link } from 'react-router-dom';
 
-function HostMenu() {
+function HostCreate() {
 
     const [token, setToken] = useCookies(['mytoken'])
     const [status, setStatus] = useCookies(['status'])
@@ -16,17 +16,10 @@ function HostMenu() {
             navigate('/')
         }
     }, [status])
-
+  
   return (
-    <div className="container">
-
-      <h1>Host Menu</h1> <br/>
-
-      <Link className='btn btn-success' role="button" to="/host/create">Create a new Room</Link>
-      <hr/>
-
-    </div>
+    <div>HostCreate</div>
   )
 }
 
-export default HostMenu
+export default HostCreate

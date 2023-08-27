@@ -1,40 +1,173 @@
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
+
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import mixins
+
+from rest_framework.permissions import BasePermission
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import AllowAny
 
 from .models import *
 from .serializers import *
-# from .serializers import TestSerializer
-# from .serializers import UserSerializer
 
 from users.models import CustomUser
+
+# Custom Permissions
+
+# -> CustomUser
+class IsHimself(BasePermission):
+    
+    def has_object_permission(self, request, view, obj):
+        if request.user:
+            return obj.id == request.user.id
+        else:
+            return False
+
+class IsHost(BasePermission):
+    
+    def has_object_permission(self, request, view, obj):
+        if request.user:
+            return request.user.isHost
+        else:
+            return False
+
+class IsRoomOwner(BasePermission):
+    
+    def has_object_permission(self, request, view, obj):
+        if request.user:
+            return request.user == obj.owner
+        else:
+            return False
+
+# Paginator
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 # Create your views here.
 
 # Usins model viewset:
-class TestViewSet(viewsets.ModelViewSet):
-    queryset = Test.objects.all()
-    serializer_class = TestSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (TokenAuthentication,)
+# class TestViewSet(viewsets.ModelViewSet):
+#     queryset = Test.objects.all()
+#     serializer_class = TestSerializer
+#     permission_classes = [IsAuthenticated]
+#     authentication_classes = (TokenAuthentication,)
 
+'''
+User View Set: (we want all mixins included, so ModelViewSet)
+--CreateModelMixin / POST -- everyone
+--RetrieveModelMixin / GET -- everyone
+--UpdateModelMixin / PUT -- admin + owner
+--DestroyModelMixin / DELETE -- admin + owner
+--ListModelMixin / GET -- everyone
+'''
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-
-class UserStatusViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserStatusSerializer
-    
-    permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
     
-    def get_queryset(self):
-        return super().get_queryset().filter(id=self.request.user.id)
+    def get_permissions(self):
+        if self.action == 'create' or self.action == 'list' or self.action == 'retrieve':
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsAdminUser | IsHimself]
+        return super(self.__class__,self).get_permissions()
 
+
+# class UserStatusViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = UserStatusSerializer
+    
+#     permission_classes = [IsAuthenticated]
+#     authentication_classes = (TokenAuthentication,)
+    
+#     def get_queryset(self):
+#         return super().get_queryset().filter(id=self.request.user.id)
+
+'''
+Room View set:
+--CreateModelMixin / POST -- host
+--RetrieveModelMixin / GET -- everyone
+--UpdateModelMixin / PUT -- admin + owner
+--DestroyModelMixin / DELETE -- admin + owner
+--ListModelMixin / GET -- everyone
+'''
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    authentication_classes = (TokenAuthentication,)
+    pagination_class = StandardResultsSetPagination
+    
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [IsHost]
+        elif self.action == 'retrive' or self.action == 'list':
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsAdminUser | IsRoomOwner]
+        return super(self.__class__,self).get_permissions()
+
+    def get_queryset(self):
+        # Order the results by price
+        results = super().get_queryset().order_by('price_per_day')
+        
+        # Filter the results by:
+        maxcost = self.request.GET.get('maxcost') # max cost per day
+        type = self.request.GET.get('type') # type of the room
+        lr = self.request.GET.get('lr') # has living room
+        wifi = self.request.GET.get('wifi') # has wifi
+        ac = self.request.GET.get('ac') # has ac
+        heating = self.request.GET.get('heating') # has heating
+        stove = self.request.GET.get('stove') # has stove
+        parking = self.request.GET.get('parking') # has parking
+        tv = self.request.GET.get('tv') # has tv
+        elevator = self.request.GET.get('elevator') # has elevator
+        
+        if maxcost is not None and maxcost != '':
+            results = results.filter(price_per_day__lte=maxcost)
+        
+        if type is not None and type != '':
+            results = results.filter(room_type=type)
+        
+        if lr is not None:
+            results = results.filter(living_room=True)
+        
+        if wifi is not None:
+            results = results.filter(wifi=True)
+            
+        if ac is not None:
+            results = results.filter(air_condition=True)
+        
+        if heating is not None:
+            results = results.filter(heating=True)
+            
+        if stove is not None:
+            results = results.filter(stove=True)
+        
+        if parking is not None:
+            results = results.filter(parking=True)
+        
+        if tv is not None:
+            results = results.filter(television=True)
+
+        if elevator is not None:
+            results = results.filter(elevator=True)
+            
+        return results
+
+class RoomHostViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsHost, IsRoomOwner]
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user.id)
+    
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()

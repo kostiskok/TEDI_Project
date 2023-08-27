@@ -13,7 +13,7 @@ class Room(models.Model):
     name = models.CharField(max_length=100) # Name of the room
     desc = models.TextField() # Description of the room
     
-    photo = models.ImageField(upload_to='uploads/rooms', default='uploads/default_room.jpg')
+    photo = models.ImageField(upload_to='uploads/rooms', default='default_room.jpg')
     
     # An owner can have multiple rooms, but each room has only one owner
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)

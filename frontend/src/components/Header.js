@@ -9,6 +9,7 @@ function Header() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [token, setToken, removeToken] = useCookies(['mytoken'])
+    const [userid, setUserid, removeUserid] = useCookies(['userid'])
     const [status, setStatus, removeStatus] = useCookies(['status'])
 
     const [isLogged, setLogged] = useState(false)
@@ -20,13 +21,18 @@ function Header() {
     // Login
     const loginBtn = () => {
         APIService.loginUser({username, password})
-        .then(resp => resp.token ? setToken('mytoken', resp.token) : console.log('No username with that password'))
+        // .then(resp => resp.token ? setToken('mytoken', resp.token) : console.log('No username with that password'))
+        .then(resp => resp.token 
+            ? [setToken('mytoken', resp.token), setUserid('userid', resp.id)] 
+            : console.log('No username with that password')
+        )
         .catch(error => console.log(error))
     }
 
     // Logout
     const logoutBtn = () => {
         removeToken(['mytoken'])
+        removeUserid(['userid'])
         removeStatus(['status'])
     }
 
@@ -39,8 +45,11 @@ function Header() {
         if(token['mytoken']){
             setLogged(true)
 
-            APIService.userStatus(token['mytoken'])
-            .then(resp => resp[0] ? setStatus('status', resp[0]) : console.log('There was an error with the status retrieval'))
+            // APIService.userStatus(token['mytoken'])
+            // .then(resp => resp[0] ? setStatus('status', resp[0]) : console.log('There was an error with the status retrieval'))
+            // .catch(error => console.log(error))
+            APIService.getUser(userid['userid'])
+            .then(resp => resp ? setStatus('status', resp) : console.log('There was an error with the status retrieval'))
             .catch(error => console.log(error))
         }
         else{

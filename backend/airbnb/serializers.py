@@ -15,6 +15,9 @@ class TestSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description']
 
 class UserSerializer(serializers.ModelSerializer):
+    
+    isAdmin = serializers.SerializerMethodField('get_is_staff')
+    
     class Meta:
         model = CustomUser
         fields = ['id', 
@@ -26,7 +29,8 @@ class UserSerializer(serializers.ModelSerializer):
                   'phone',
                   'isRenter',
                   'waitingHost',
-                  'isHost'
+                  'isHost',
+                  'isAdmin'
                   ]
 
         extra_kwargs = {'password':{
@@ -39,13 +43,6 @@ class UserSerializer(serializers.ModelSerializer):
         Token.objects.create(user=user)
         return user
     
-class UserStatusSerializer(serializers.ModelSerializer):
-    isAdmin = serializers.SerializerMethodField('get_is_staff')
-    
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'isAdmin', 'isRenter', 'isHost', 'waitingHost']
-    
     def get_is_staff(self, obj):
         return obj.is_staff
     
@@ -53,7 +50,7 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields=['id','name','desc','owner','longitude','latitude','address','date_start','date_end','price_per_day','price_per_person','max_num_people','num_of_beds','num_of_bedrooms',
-                'num_of_bathrooms','room_type','area','living_room','wifi','air_condition','heating','stove','television','parking','elevator']
+                'num_of_bathrooms','room_type','area','living_room','wifi','air_condition','heating','stove','television','parking','elevator', 'photo']
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
