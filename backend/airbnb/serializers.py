@@ -49,7 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields=['id','name','desc','owner','longitude','latitude','address','date_start','date_end','price_per_day','price_per_person','max_num_people','num_of_beds','num_of_bedrooms',
+        fields=['id','name','desc','owner','longitude','latitude','address','transportation','date_start','date_end','price_per_day','price_per_person','max_num_people','num_of_beds','num_of_bedrooms',
                 'num_of_bathrooms','room_type','area','living_room','wifi','air_condition','heating','stove','television','parking','elevator', 'photo']
 
 class ReviewSerializer(serializers.ModelSerializer):

@@ -9,7 +9,7 @@ function Register() {
     /*
     * When a user is already logged in, just redirect him to the main page
     **/
-    const [token, setToken] = useCookies(['mytoken'])
+    const [token] = useCookies(['mytoken'])
     let navigate = useNavigate()
     useEffect(() => {
         if(token['mytoken']){
@@ -25,12 +25,11 @@ function Register() {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [isRenter, setIsRenter] = useState(false)
-    const [isHost] = useState(false)
     const [waitingHost, setWaitingHost] = useState(false)
 
     const RegisterBtn = () => {
 
-        APIService.registerUser({
+        APIService.registerUser(
             username,
             password,
             firstName,
@@ -38,24 +37,23 @@ function Register() {
             email,
             phone,
             isRenter,
-            isHost,
             waitingHost
-        })
+        )
         .then(resp => console.log(resp))
         .catch(error => console.log(error))
 
     }
 
   return(
-    <div className="container">
+    <div className="container p-2">
 
-        Register
+        <h1>Register</h1><hr/>
 
         <div className="row">
             <div className="col-sm-2">
                 <label htmlFor='username' className="form-label">Username</label>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
                 <input type='text' className="form-control" id='username' placeholder="Username"
                 value = {username} onChange={e => setUsername(e.target.value)}/>
             </div>
@@ -65,7 +63,7 @@ function Register() {
             <div className="col-sm-2">
                 <label htmlFor='password' className="form-label">Password</label>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
                 <input type='password' className="form-control" id='password' placeholder="Password"
                 value = {password} onChange={e => setPassword(e.target.value)}/>
             </div>
@@ -75,7 +73,7 @@ function Register() {
             <div className="col-sm-2">
                 <label htmlFor='password_conf' className="form-label">Confirm password</label>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
                 <input type='password' className="form-control" id='password_conf' placeholder="Confirm Password"
                 value = {passwordConf} onChange={e => setPasswordConf(e.target.value)}/>
             </div>
@@ -85,7 +83,7 @@ function Register() {
             <div className="col-sm-2">
                 <label htmlFor='first_name' className="form-label">First Name</label>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
                 <input type='text' className="form-control" id='first_name' placeholder="First Name"
                 value = {firstName} onChange={e => setFirstName(e.target.value)}/>
             </div>
@@ -95,7 +93,7 @@ function Register() {
             <div className="col-sm-2">
                 <label htmlFor='last_name' className="form-label">Last Name</label>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
                 <input type='text' className="form-control" id='last_name' placeholder="Last Name"
                 value = {lastName} onChange={e => setLastName(e.target.value)}/>
             </div>
@@ -105,7 +103,7 @@ function Register() {
             <div className="col-sm-2">
                 <label htmlFor='email' className="form-label">Email</label>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
                 <input type='email' className="form-control" id='email' placeholder="Email"
                 value = {email} onChange={e => setEmail(e.target.value)}/>
             </div>
@@ -115,7 +113,7 @@ function Register() {
             <div className="col-sm-2">
                 <label htmlFor='phone' className="form-label">Phone Number</label>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
                 <input type='tel' className="form-control" id='phone' placeholder="Phone"
                 value = {phone} onChange={e => setPhone(e.target.value)}/>
                 <small>Format: +12345678901</small>

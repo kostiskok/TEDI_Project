@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 function HostEdit() {
+
+    const { id } = useParams()
 
     const [token, setToken] = useCookies(['mytoken'])
     const [status, setStatus] = useCookies(['status'])
@@ -18,7 +20,7 @@ function HostEdit() {
     }, [status])
 
   return (
-    <div>HostEdit</div>
+    <div>HostEdit{id}</div>
   )
 }
 
