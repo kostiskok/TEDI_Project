@@ -3,6 +3,22 @@ import { useCookies } from 'react-cookie';
 import { useNavigate, Link } from 'react-router-dom';
 import APIService from '../APIService';
 
+// Stuff needed for Openstreet Map / leaflet
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, useMapEvents, Marker, Popup, useMap, } from 'react-leaflet';
+import L from 'leaflet';
+
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+const coordinates = [37.9708, 23.7261]; //Athens coordinates
+
 function HostCreate() {
 
     const [token] = useCookies(['mytoken'])
@@ -11,10 +27,12 @@ function HostCreate() {
 
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
-    //map for long and lat
+    const [photo, setPhoto] = useState(null)
+
     const [address, setAddress] = useState('')
     const [transportation, setTransportation] = useState('')
-    //dates
+    const [dateStart, setDateStart] = useState('')
+    const [dateEnd, setDateEnd] = useState('')
     const [priceDay, setPriceDay] = useState(50)
     const [pricePerson, setPricePerson] = useState(10)
     const [maxPerson, setMaxPerson] = useState(2)
@@ -33,6 +51,22 @@ function HostCreate() {
     const [parking, setParking] = useState(false)
     const [elevator, setElevator] = useState(false)
 
+    //State and function for the OpenStreet Map
+    const [position, setPosition] = useState(null)
+
+    function LocationMarker(){
+        const map = useMapEvents({
+            click(e){
+                setPosition(e.latlng)
+                console.log(position)
+            }
+        })
+
+        return position == null ? null : (
+            <Marker position={position}/>
+        )
+    }
+
     /*
     * If the user is not a host, redirect him to the home page
     **/
@@ -45,15 +79,19 @@ function HostCreate() {
   
     const createRoom = () => {
 
-        APIService.createRoom(token['mytoken'], userid['userid'], name, desc, address, transportation, priceDay, pricePerson, maxPerson, rules, numBeds, numBedrooms, numBathrooms, type, area, lr, wifi, ac, heating, stove, tv, parking, elevator)
+        APIService.createRoom(token['mytoken'], userid['userid'], name, desc, photo, position.lng, position.lat, address, transportation, dateStart, dateEnd, 
+            priceDay, pricePerson, maxPerson, rules, numBeds, numBedrooms, numBathrooms, type, area, lr, wifi, ac, heating, stove, tv, parking, elevator)
         .then(resp => console.log(resp))
         .catch(error => console.log(error))
+
+        navigate('/host/')
 
     }
 
   return (
     <div className='container p-2'>
         <h1>Create a new Room</h1><hr/>
+
         <div className='container'>
 
             <div className='row mb-3'>
@@ -75,8 +113,15 @@ function HostCreate() {
                 </div>
             </div>
             <br/>
-            <div className='bg-warning mb-3'>
-                MAP
+            <div className='mb-3 bg-danger'>
+                <p>Select the location of the house:</p>
+                <MapContainer center={coordinates} zoom={12} style={{height: '500px'}}>
+                    <TileLayer
+                        attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <LocationMarker />
+                </MapContainer>
             </div>
             <div className='row mb-3'>
                 <div className='col-lg-2 text-end'>
@@ -98,11 +143,11 @@ function HostCreate() {
             </div>
             <br/>
             <div className='row mb-3'>
-                <div className='col-lg-2 text-end bg-warning'>
+                <div className='col-lg-2 text-end'>
                     <label htmlFor='transportation' className='form-label'>Starting Date</label>
                 </div>
                 <div className='col-lg-2'>
-                    <input type='date' className='form-control'/>
+                    <input type='date' className='form-control' value={dateStart} onChange={e => setDateStart(e.target.value)}/>
                 </div>
                 <div className='col-lg-3 text-end'>
                     <label htmlFor='price_per_day' className='form-label'>Price per day:</label>
@@ -120,11 +165,11 @@ function HostCreate() {
                 </div>
             </div>
             <div className='row mb-3'>
-            <div className='col-lg-2 text-end bg-warning'>
+            <div className='col-lg-2 text-end'>
                     <label htmlFor='transportation' className='form-label'>End Date</label>
                 </div>
                 <div className='col-lg-2'>
-                    <input type='date' className='form-control'/>
+                    <input type='date' className='form-control' value={dateEnd} onChange={e => setDateEnd(e.target.value)}/>
                 </div>
                 <div className='col-lg-7 text-end'>
                     <label htmlFor='maxperson' className='form-label'>Max number of people:</label>
@@ -231,8 +276,17 @@ function HostCreate() {
                     <label className="form-check-label" htmlFor="elevator">Elevator</label>
                 </div>
             </div>
+            <div className="row mt-5">
+                <div className="col-lg-2 text-end"> 
+                    <label htmlFor='type' className='form-label'>Main Photo</label>
+                </div>
+                <div className="col-lg-3">
+                    <input type='file' className='form-control' onChange={(e) => setPhoto(e.target.files[0])}/>
+                </div>
+            </div>
         </div>
         <br/>
+         
         <div className='text-end'>
             <button className='btn btn-success col-6' onClick={createRoom}>Create</button>
         </div>

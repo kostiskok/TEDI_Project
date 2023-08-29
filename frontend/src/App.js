@@ -23,6 +23,8 @@ function App() {
     <div>
       {isLogged ? <div>in</div> : <div>out</div>}
         tests
+
+        
     </div>
   );
 }

@@ -17,6 +17,7 @@ function Register() {
         }
       }, [token])
 
+    // Form fields
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConf, setPasswordConf] = useState('')
@@ -26,21 +27,223 @@ function Register() {
     const [phone, setPhone] = useState('')
     const [isRenter, setIsRenter] = useState(false)
     const [waitingHost, setWaitingHost] = useState(false)
+    const [photo, setPhoto] = useState(null)
+
+    // Boolean flags for warnings/errors in register
+    const [pressedOnce, setPressedOnce] = useState(false)
+    const [users, setUsers] = useState([])
+
+    const [usernameLegit, setUsernameLegit] = useState(false)
+    const [usernameFill, setUsernameFill] = useState(false)
+    const [passwordFill, setPasswordFill] = useState(false)
+    const [passwordsMatch, setPasswordsMatch] = useState(false)
+    const [firstNameFill, setFirstNameFill] = useState(false)
+    const [lastNameFill, setLastNameFill] = useState(false)
+    const [emailFill, setEmailFill] = useState(false)
+    const [emailValid, setEmailValid] = useState(false)
+    const [phoneFill, setPhoneFill] = useState(false)
+    const [phoneValid, setPhoneValid] = useState(false)
+
+    useEffect(() => {
+        APIService.getUsers()
+        .then(resp => setUsers(resp))
+        .catch(error => console.log(error))
+    }, [])
+
+    // Check if username is used by another user
+    useEffect(() => {
+        let flag = false
+        for (var user of users){
+            if (username == user.username){
+                flag = true;
+            }
+        }
+
+        if (flag){
+            setUsernameLegit(false)
+        }
+        else{
+            setUsernameLegit(true)
+        }
+    }, [username])
+
+    useEffect(() => {
+        if (username === ''){
+            setUsernameFill(false)
+        }
+        else{
+            setUsernameFill(true)
+        }
+    }, [username])
+
+    useEffect(() => {
+        if (password === ''){
+            setPasswordFill(false)
+        }
+        else{
+            setPasswordFill(true)
+        }
+    }, [password])
+
+    useEffect(() => {
+        if (password === passwordConf && password !== ''){
+            setPasswordsMatch(true)
+        }
+        else{
+            setPasswordsMatch(false)
+        }
+    }, [password, passwordConf])
+
+    useEffect(() => {
+        if (firstName === ''){
+            setFirstNameFill(false)
+        }
+        else{
+            setFirstNameFill(true)
+        }
+    }, [firstName])
+
+    useEffect(() => {
+        if (lastName === ''){
+            setLastNameFill(false)
+        }
+        else{
+            setLastNameFill(true)
+        }
+    }, [lastName])
+
+    useEffect(() => {
+        if (email === ''){
+            setEmailFill(false)
+        }
+        else{
+            setEmailFill(true)
+        }
+    }, [email])
+
+    useEffect(() => {
+        var regExp = /\S+@\S+\.\S+/;
+        if (regExp.test(email)){
+            setEmailValid(true)
+        }
+        else{
+            setEmailValid(false)
+        }
+    }, [email])
+
+    useEffect(() => {
+        if (phone === ''){
+            setPhoneFill(false)
+        }
+        else{
+            setPhoneFill(true)
+        }
+    }, [phone])
+
+    useEffect(() => {
+        var regExp = /\+\d{11}$/;
+        if (regExp.test(phone)){
+            setPhoneValid(true)
+        }
+        else{
+            setPhoneValid(false)
+        }
+    }, [phone])
 
     const RegisterBtn = () => {
 
-        APIService.registerUser(
-            username,
-            password,
-            firstName,
-            lastName,
-            email,
-            phone,
-            isRenter,
-            waitingHost
+        setPressedOnce(true)
+        
+        if (usernameLegit && usernameFill && passwordFill && passwordsMatch && firstNameFill && 
+            lastNameFill && emailFill && emailValid && phoneFill && phoneValid && (isRenter || waitingHost)){
+            APIService.registerUser(
+                username,
+                password,
+                photo,
+                firstName,
+                lastName,
+                email,
+                phone,
+                isRenter,
+                waitingHost
+            )
+            .then(resp => console.log(resp))
+            .catch(error => console.log(error))
+            
+            navigate('/')
+        }
+
+    }
+
+    const warnings = () => {
+
+        let usernameLegitWarning;
+        let usernameWarning;
+        let passwordWarning;
+        let confirmWarning;
+        let firstNameWarning;
+        let lastNameWarning;
+        let emailWarning;
+        let emailValidWarning;
+        let phoneWarning;
+        let phoneValidWarning;
+        let rolesWarning;
+
+        if (pressedOnce){
+
+            if (!usernameLegit){
+                usernameLegitWarning = <div>! Username is being used by another user</div>;
+            }
+            if (!usernameFill){
+                usernameWarning = <div>! Username is a required field</div>;
+            }
+            if (!passwordFill){
+                passwordWarning = <div>! Password is a required field</div>;
+            }
+            if (!passwordsMatch){
+                confirmWarning = <div>! Passwords do not match</div>;
+            }
+            if (!firstNameFill){
+                firstNameWarning = <div>! First name is a required field</div>;
+            }
+            if (!lastNameFill){
+                lastNameWarning = <div>! Last name is a required field</div>;
+            }
+            if (!emailFill){
+                emailWarning = <div>! Email is a required field</div>;
+            }
+            if (!emailValid){
+                emailValidWarning = <div>! This is not a valid email address</div>
+            }
+            if (!phoneFill){
+                phoneWarning = <div>! Phone is a required field</div>;
+            }
+            if (!phoneValid){
+                phoneValidWarning = <div>! This is not a valid phone number</div>;
+            }
+            if (!isRenter && !waitingHost){
+                rolesWarning = <div>! No roles selected</div>
+            }
+
+        }
+
+        return(
+            <div className="text-danger mt-2">
+                <b>
+                    {usernameLegitWarning}
+                    {usernameWarning}
+                    {passwordWarning}
+                    {confirmWarning}
+                    {firstNameWarning}
+                    {lastNameWarning}
+                    {emailWarning}
+                    {emailValidWarning}
+                    {phoneWarning}
+                    {phoneValidWarning}
+                    {rolesWarning}
+                </b>
+            </div>
         )
-        .then(resp => console.log(resp))
-        .catch(error => console.log(error))
 
     }
 
@@ -136,10 +339,20 @@ function Register() {
                 </label>
             </div>
         </div>
+        <div className="row mt-5">
+            <div className="col-sm-2">
+                <label htmlFor='photo' className="form-label">Avatar (Optional)</label>
+            </div>
+            <div className="col-sm-4">
+                <input type='file' className="form-control" id='photo'
+                onChange={(e) => setPhoto(e.target.files[0])}/>
+            </div>
+        </div>
         <br/>
 
         <button onClick={RegisterBtn} className="btn btn-primary">Register</button>
-                
+        {warnings()}
+
     </div>
   )
 }

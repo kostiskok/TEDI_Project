@@ -33,6 +33,18 @@ function Rooms() {
 
     }, [page, type, maxCost, lr, wifi, ac, heating, stove, tv, parking, elevator])
 
+    // useEffect(() => {
+
+    //     setRoomHost([])
+    //     var len = rooms.length
+    //     for (var i = 0; i < len; i++){
+    //         var new_host = [...roomHost, rooms[i].name]
+    //         setRoomHost(new_host)
+    //         console.log(i)
+    //     }
+
+    // }, [updateInfo])
+
     const pageManagement = () => {
 
         var pageStart = 10*(page-1) + 1
@@ -56,6 +68,16 @@ function Rooms() {
         )
 
     }
+
+    // const getHosts = (id) => {
+
+    //     var host = APIService.getUser(id)
+    //             .then(resp => resp.json())
+
+    //     setRoomHost([...roomHost, host.name])
+    //     console.log(roomHost)
+
+    // }
 
     const filterManagement = () => {
 
@@ -144,38 +166,38 @@ function Rooms() {
                     {rooms && rooms.map((item, index) => (
                     <div className="col mb-4" key={item.id}>
                         <div className="card"> 
-                        <div className="card-body bg-light">
-                            <div className="container">
-                            <div className="row">
-                                <div className="col-lg-9">
-                                <h2 className="text-start">{item.name}</h2>
+                            <div className="card-body bg-light">
+                                <div className="container">
+                                    <div className="row">
+                                        <div className="col-lg-9">
+                                        <h2 className="text-start">{item.name}</h2>
+                                        </div>
+                                        <div className="col-lg-3">
+                                        <h4 className="text-end text-black-50">
+                                            Owner{item.owner}</h4>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="col-lg-3">
-                                <h4 className="text-end text-black-50">
-                                    Owner{item.owner}</h4>
-                                </div>
-                            </div>
-                            </div>
-                            <hr/><br/>
-                            <img src={item.photo} style={{maxWidth: '100%'}}/>
-                            <br/><br/>
-                            <div className="container">
-                            <div className="row">
-                                <div className="col-lg-6">
-                                <ul>
-                                    <li>Type: {item.room_type === 'h' ? 'House' : item.room_type === 's' ? 'Shared' : 'Private'}</li>
-                                    <li>Num of beds: {item.num_of_beds}</li>
-                                    <li>Num of reviews: -</li>
-                                </ul>
-                                <h4>SCORE</h4>
-                                </div>
-                                <div className="col-lg-6">
-                                <h3 className="text-center">{item.price_per_day}$/day</h3>
-                                <Link className='btn btn-success btn-lg col-12' role="button" to={`/rooms/${item.id}`}>View</Link>
-                                </div>
-                            </div>
+                                <hr/><br/>
+                                <img src={item.photo} style={{maxWidth: '100%', maxHeight: '600px'}}/>
+                                <br/><br/>
+                                <div className="container">
+                                <div className="row">
+                                    <div className="col-lg-6">
+                                    <ul>
+                                        <li>Type: {item.room_type === 'h' ? 'House' : item.room_type === 's' ? 'Shared' : 'Private'}</li>
+                                        <li>Num of beds: {item.num_of_beds}</li>
+                                        <li>Num of reviews: -</li>
+                                    </ul>
+                                    <h4>SCORE</h4>
+                                    </div>
+                                        <div className="col-lg-6">
+                                            <h3 className="text-center">{item.price_per_day}$/day</h3>
+                                            <Link className='btn btn-success btn-lg col-12' role="button" to={`/rooms/${item.id}`}>View</Link>
+                                        </div>
+                                    </div>
+                                </div> 
                             </div> 
-                        </div> 
                         </div>
                     </div>
                     ))}

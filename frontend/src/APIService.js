@@ -1,23 +1,21 @@
 export default class APIService{
 
-    static registerUser(username, password, first_name, last_name, email, phone, isRenter, waitingHost){
+    static registerUser(username, password, photo, first_name, last_name, email, phone, isRenter, waitingHost){
+
+        const data = new FormData();
+        data.append('username', username);
+        data.append('password', password);
+        data.append('photo', photo);
+        data.append('first_name', first_name);
+        data.append('last_name', last_name);
+        data.append('email', email);
+        data.append('phone', phone);
+        data.append('isRenter', isRenter);
+        data.append('waitingHost', waitingHost);
+
         return fetch('http://127.0.0.1:8000/airbnb/users/', {
             'method':'POST',
-            headers: {
-                'Content-Type':'application/json',
-            },
-            // body:JSON.stringify(body)
-            body:JSON.stringify({
-                'username':username,
-                'password':password,
-                'first_name':first_name,
-                'last_name':last_name,
-                'email':email,
-                'phone':phone,
-                'isRenter':isRenter,
-                'waitingHost':waitingHost,
-                'isHost':false
-            })
+            body: data
 
         }).then(resp => resp.json())
     }
@@ -95,41 +93,43 @@ export default class APIService{
         }).then(resp => resp.json())
     }
 
-    static createRoom(token, id, name, desc, address, transportation, price_per_day, price_per_person, maxperson, rules, numbeds, numbedrooms, numbathrooms, type, area, lr, wifi, ac, heating, stove, tv, parking, elevator){
+    static createRoom(token, id, name, desc, photo, long, lat, address, transportation, dateStart, dateEnd, price_per_day, price_per_person, 
+        maxperson, rules, numbeds, numbedrooms, numbathrooms, type, area, lr, wifi, ac, heating, stove, tv, parking, elevator){
+
+        const data = new FormData();
+        data.append('name', name);
+        data.append('desc', desc);
+        data.append('photo', photo)
+        data.append('owner', id);
+        data.append('longitude', Number(long).toFixed(6));
+        data.append('latitude', Number(lat).toFixed(6));
+        data.append('address', address);
+        data.append('transportation', transportation);
+        data.append('date_start', dateStart);
+        data.append('date_end', dateEnd);
+        data.append('price_per_day', price_per_day);
+        data.append('price_per_person', price_per_person);
+        data.append('max_num_people', maxperson);
+        data.append('num_of_beds', numbeds);
+        data.append('num_of_bedrooms', numbedrooms);
+        data.append('num_of_bathrooms', numbathrooms);
+        data.append('room_type', type);
+        data.append('area', area);
+        data.append('living_room', lr);
+        data.append('wifi', wifi);
+        data.append('air_condition', ac);
+        data.append('heating', heating);
+        data.append('stove', stove);
+        data.append('television', tv);
+        data.append('parking', parking);
+        data.append('elevator', elevator);
 
         return fetch(`http://127.0.0.1:8000/airbnb/rooms/`, {
             'method': 'POST',
             headers: {
-                'Content-Type':'application/json',
                 'Authorization':`Token ${token}`
             },
-            body: JSON.stringify({
-                'name':name,
-                'desc':desc,
-                'owner':id,
-                'longitude':5,
-                'latitude':5,
-                'address':address,
-                'transportation':transportation,
-                'date_start':"2023-05-02",
-                'date_end':"2023-05-02",
-                'price_per_day':price_per_day,
-                'price_per_person':price_per_person,
-                'max_num_people':maxperson,
-                'num_of_beds':numbeds,
-                'num_of_bedrooms':numbedrooms,
-                'num_of_bathrooms':numbathrooms,
-                'room_type':type,
-                'area':area,
-                'living_room':lr,
-                'wifi':wifi,
-                'air_condition':ac,
-                'heating':heating,
-                'stove':stove,
-                'television':tv,
-                'parking':parking,
-                'elevator':elevator
-            }),
+            body : data
         }).then(resp => resp.json())
 
     }

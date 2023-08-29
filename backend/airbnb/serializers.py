@@ -22,7 +22,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id', 
                   'username', 
-                  'password', 
+                  'password',
+                  'photo',
                   'first_name', 
                   'last_name',
                   'email',
