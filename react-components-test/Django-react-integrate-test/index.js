@@ -8,6 +8,7 @@ import {Route, Routes, BrowserRouter} from 'react-router-dom';
 // import Form from './components/Form';
 import Login from './components/Login';
 import {CookiesProvider} from 'react-cookie';
+import Profile from './components/Profile';
 
 function Router() {
 
@@ -20,6 +21,7 @@ function Router() {
         {/* <Route exact path = '/' element = {<App />}/> */}
         <Route exact path = '/' element = {<Login />}/>
         <Route exact path = '/articles' element = {<App />}/>
+        <Route exact path = '/profile' element= {<Profile />}/>
         {/* <Route exact path = '/login' element = {<Form />}/> */}
       </Routes>
     </BrowserRouter>
