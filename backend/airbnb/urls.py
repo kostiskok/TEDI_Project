@@ -11,17 +11,23 @@ router.register('users', UserViewSet)
 
 router.register('rooms', RoomViewSet)
 router.register('roomhost', RoomHostViewSet)
+router.register('roomadmin', RoomAdminViewSet)
+router.register('roomxml', RoomXMLViewSet)
 
 router.register('reviews', ReviewViewSet)
+router.register('reviewsxml', ReviewXMLViewSet)
 
 router.register('messages', MessageViewSet)
 
-router.register('rents', RentViewSet)
+router.register('bookings', RentViewSet)
+router.register('bookingsxml', RentXMLViewSet)
 
 
 
 urlpatterns = [
-    path('airbnb/', include(router.urls)) 
+    path('airbnb/', include(router.urls)), 
+    path('airbnb/details', review_details)
+    
 ]
 
 # For alternate views, urlpatterns may be:

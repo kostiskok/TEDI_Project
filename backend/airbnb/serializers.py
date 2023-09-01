@@ -57,6 +57,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields=['id','user','room','score','review_text','date']
+    
         
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:

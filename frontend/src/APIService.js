@@ -62,7 +62,13 @@ export default class APIService{
         })
     }
 
-    static getRooms(page, type, maxcost, lr, wifi, ac, heating, stove, tv, parking, elevator){
+    static getRooms(page, maxPerson, position, dateStart, dateEnd, type, maxcost, lr, wifi, ac, heating, stove, tv, parking, elevator){
+
+        var maxPersonFilter = (maxPerson !== "" && maxPerson !== null) ? `&people=${maxPerson}` : ""
+        var latFilter = (position !== "" && position !== null) ? `&lat=${Number(position.lat).toFixed(6)}` : ""
+        var longFilter = (position !== "" && position !== null) ? `&lon=${Number(position.lng).toFixed(6)}` : ""
+        var dateStartFilter = (dateStart !== "" && dateStart !== null) ? `&dateStart=${dateStart}` : ""
+        var dateEndFilter = (dateEnd !== "" && dateEnd !== null) ? `&dateEnd=${dateEnd}` : ""
 
         var typeFilter = (type !== "") ? `&type=${type}` : ""
         var maxCostFilter = (maxcost) ? `&maxcost=${maxcost}` : ""
@@ -75,7 +81,7 @@ export default class APIService{
         var parkingFilter = (parking) ? "&parking" : ""
         var elevatorFilter = (elevator) ? "&elevator" : ""
 
-        return fetch(`http://127.0.0.1:8000/airbnb/rooms/?page=${page}${typeFilter}${maxCostFilter}${lrFilter}${wifiFilter}${acFilter}${heatingFilter}${stoveFilter}${tvFilter}${parkingFilter}${elevatorFilter}`, {
+        return fetch(`http://127.0.0.1:8000/airbnb/rooms/?page=${page}${maxPersonFilter}${latFilter}${longFilter}${dateStartFilter}${dateEndFilter}${typeFilter}${maxCostFilter}${lrFilter}${wifiFilter}${acFilter}${heatingFilter}${stoveFilter}${tvFilter}${parkingFilter}${elevatorFilter}`, {
             'method': 'GET',
             headers: {
                 'Content-Type':'application/json',
@@ -85,6 +91,16 @@ export default class APIService{
 
     static hostRooms(token){
         return fetch(`http://127.0.0.1:8000/airbnb/roomhost/`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+                'Authorization':`Token ${token}`
+            }
+        }).then(resp => resp.json())
+    }
+
+    static adminRooms(token){
+        return fetch(`http://127.0.0.1:8000/airbnb/roomadmin/`, {
             'method': 'GET',
             headers: {
                 'Content-Type':'application/json',
@@ -132,6 +148,85 @@ export default class APIService{
             body : data
         }).then(resp => resp.json())
 
+    }
+
+    static getReviews(){
+        return fetch('http://127.0.0.1:8000/airbnb/reviews', {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
+    static getReviewDetails(){
+        return fetch('http://127.0.0.1:8000/airbnb/details', {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
+    static getReviewsByRenter(id){
+        return fetch(`http://127.0.0.1:8000/airbnb/reviews?id=${id}`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
+    static getReviewsByHost(host){
+        return fetch(`http://127.0.0.1:8000/airbnb/reviews?host=${host}`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
+    static getBookings(){
+        return fetch('http://127.0.0.1:8000/airbnb/bookings', {
+            headers: {
+                'Content-Type': 'application/xml',
+            },
+        }).then(resp => resp.text())
+    } 
+
+    // XML Requests
+    static adminRoomsXML(token){
+        return fetch(`http://127.0.0.1:8000/airbnb/roomxml/`, {
+            headers: {
+                'Content-Type': 'application/xml',
+                'Authorization':`Token ${token}`,
+            },
+        }).then(resp => resp.text())
+    }
+
+    static getBookingsXML(){
+        return fetch('http://127.0.0.1:8000/airbnb/bookingsxml', {
+            headers: {
+                'Content-Type': 'application/xml',
+            },
+        }).then(resp => resp.text())
+    } 
+
+    static getReviewsByRenterXML(id){
+        return fetch(`http://127.0.0.1:8000/airbnb/reviewsxml?id=${id}`, {
+            headers: {
+                'Content-Type': 'application/xml',
+            },
+        }).then(resp => resp.text())
+    }
+
+    static getReviewsByHostXML(host){
+        return fetch(`http://127.0.0.1:8000/airbnb/reviewsxml?host=${host}`, {
+            headers: {
+                'Content-Type': 'application/xml',
+            },
+        })
+        .then(resp => resp.text())
     }
 
 }

@@ -248,7 +248,7 @@ function Register() {
     }
 
   return(
-    <div className="container p-2">
+    <div className="container">
 
         <h1>Register</h1><hr/>
 

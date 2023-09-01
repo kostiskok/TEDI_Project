@@ -95,7 +95,7 @@ class Message(models.Model):
     # ---- Methods ----
     
     def __str__(self):
-        return self.id
+        return str(self.id)
     
 class Rent(models.Model):
 
@@ -108,7 +108,7 @@ class Rent(models.Model):
     date_end=models.DateField()
 
     def __str__(self):
-        return self.id
+        return '#'+str(self.id)
     
 class Test(models.Model):
     title = models.CharField(max_length=100)
@@ -125,4 +125,4 @@ class Image(models.Model):
     description = models.TextField(max_length=100, null=False)
 
     def str(self):
-        return self.id
+        return str(self.id)

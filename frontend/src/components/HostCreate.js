@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import APIService from '../APIService';
 
 // Stuff needed for Openstreet Map / leaflet
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, useMapEvents, Marker, Popup, useMap, } from 'react-leaflet';
+import { MapContainer, TileLayer, useMapEvents, Marker } from 'react-leaflet';
 import L from 'leaflet';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -58,7 +58,7 @@ function HostCreate() {
         const map = useMapEvents({
             click(e){
                 setPosition(e.latlng)
-                console.log(position)
+                // console.log(position)
             }
         })
 
@@ -89,7 +89,7 @@ function HostCreate() {
     }
 
   return (
-    <div className='container p-2'>
+    <div className='container'>
         <h1>Create a new Room</h1><hr/>
 
         <div className='container'>
@@ -165,7 +165,7 @@ function HostCreate() {
                 </div>
             </div>
             <div className='row mb-3'>
-            <div className='col-lg-2 text-end'>
+                <div className='col-lg-2 text-end'>
                     <label htmlFor='transportation' className='form-label'>End Date</label>
                 </div>
                 <div className='col-lg-2'>

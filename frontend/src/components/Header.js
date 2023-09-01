@@ -95,7 +95,7 @@ function Header() {
 
   return(
 
-    <div className="bg-primary">
+    <div className="bg-primary mb-5">
         <nav className="nav nav-pills flex-column flex-sm-row align-items-center" style={{height: "60px"}}>
             <div className="d-flex justify-content-start">
                 <Link to="/" className="nav-link text-white">Airbnb</Link>

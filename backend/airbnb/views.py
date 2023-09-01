@@ -9,10 +9,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAdminUser
 from rest_framework.permissions import AllowAny
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from rest_framework_xml.renderers import XMLRenderer
+
 from .models import *
 from .serializers import *
 
 from users.models import CustomUser
+
+import decimal
+from datetime import datetime
 
 # Custom Permissions
 
@@ -26,6 +34,9 @@ class IsHimself(BasePermission):
             return False
 
 class IsHost(BasePermission):
+    
+    def has_permission(self, request, view):
+        return not request.user.is_anonymous and request.user.isHost
     
     def has_object_permission(self, request, view, obj):
         if request.user:
@@ -77,17 +88,6 @@ class UserViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAdminUser | IsHimself]
         return super(self.__class__,self).get_permissions()
 
-
-# class UserStatusViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = CustomUser.objects.all()
-#     serializer_class = UserStatusSerializer
-    
-#     permission_classes = [IsAuthenticated]
-#     authentication_classes = (TokenAuthentication,)
-    
-#     def get_queryset(self):
-#         return super().get_queryset().filter(id=self.request.user.id)
-
 '''
 Room View set:
 --CreateModelMixin / POST -- host
@@ -99,13 +99,54 @@ Room View set:
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-    authentication_classes = (TokenAuthentication,)
     pagination_class = StandardResultsSetPagination
+    
+    authentication_classes = (TokenAuthentication,)
+    
+    # Keep only the results close to the selected latitude and longitude
+    # * (long ~1, lat ~1)
+    def locationFilter(self, r, lat, lon):
+        results = []
+        
+        for room in r:
+            curLat = room.latitude
+            curLon = room.longitude
+            
+            if (abs(curLat - lat) < 1 and abs(curLon - lon) < 1):
+                results.append(room)
+            
+        return results
+    
+    def isAvailable(self, r, dateStart, dateEnd):
+        results = []
+        
+        for room in r:
+            roomDateStart = room.date_start
+            roomDateEnd = room.date_end
+            
+            # Date must be first of all be inside the room's availabity dates
+            if roomDateStart <= dateStart <= roomDateEnd and roomDateStart <= dateEnd <= roomDateEnd:
+                
+                bookings = Rent.objects.all().filter(room_id=room.id)
+                flag = False
+                for booking in bookings:
+                
+                    bookingDateStart = booking.date_start
+                    bookingDateEnd = booking.date_end
+                
+                    if dateEnd >= bookingDateStart and dateStart <= bookingDateEnd:
+                        flag = True
+                
+                if flag == False:
+                    results.append(room)
+                
+        
+        return results
     
     def get_permissions(self):
         if self.action == 'create':
             self.permission_classes = [IsHost]
-        elif self.action == 'retrive' or self.action == 'list':
+        elif self.action == 'retrieve' or self.action == 'list':
             self.permission_classes = [AllowAny]
         else:
             self.permission_classes = [IsAdminUser | IsRoomOwner]
@@ -126,6 +167,17 @@ class RoomViewSet(viewsets.ModelViewSet):
         parking = self.request.GET.get('parking') # has parking
         tv = self.request.GET.get('tv') # has tv
         elevator = self.request.GET.get('elevator') # has elevator
+        
+        # Used in the main page search
+        # - Check if max_num_people > people that will rent
+        people = self.request.GET.get('people') 
+        # - As for the location, check if the latitude and longitude selected are
+        #     close to the position of the room
+        lat = self.request.GET.get('lat') 
+        lon = self.request.GET.get('lon')
+        # - For every result/room, get all the bookings and check if there are no overlaps
+        dateStart = self.request.GET.get('dateStart')
+        dateEnd = self.request.GET.get('dateEnd')
         
         if maxcost is not None and maxcost != '':
             results = results.filter(price_per_day__lte=maxcost)
@@ -155,8 +207,18 @@ class RoomViewSet(viewsets.ModelViewSet):
             results = results.filter(television=True)
 
         if elevator is not None:
-            results = results.filter(elevator=True)
-            
+            results = results.filter(elevator=True) 
+        
+        
+        if people is not None and people != '':
+            results = results.filter(max_num_people__gte=people)
+        
+        if lat is not None and lat != '' and lon is not None and lon != '':
+            results = self.locationFilter(results, decimal.Decimal(lat), decimal.Decimal(lon))
+        
+        if dateStart is not None and dateStart != '' and dateEnd is not None and dateEnd != '':
+            results = self.isAvailable(results, datetime.strptime(dateStart, '%Y-%m-%d').date(), datetime.strptime(dateEnd, '%Y-%m-%d').date())
+        
         return results
 
 class RoomHostViewSet(viewsets.ModelViewSet):
@@ -167,11 +229,71 @@ class RoomHostViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         return super().get_queryset().filter(owner=self.request.user.id)
-    
+
+class RoomAdminViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAdminUser]
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    
+    def host_filter(self, r, host):
+        results = []
+        
+        for review in r:
+            owner = review.room.owner.id
+            if owner == int(host):
+                print('?')
+                results.append(review)
+            
+        return results
+    
+    def get_queryset(self):
+        results = super().get_queryset()
+        
+        id = self.request.GET.get('id')
+        if id is not None and id != '':
+            results = results.filter(user=id)
+        
+        host = self.request.GET.get('host')
+        if host is not None and host != '':
+            results = self.host_filter(results, host)
+        
+        return results
+        
+
+@api_view(['GET'])
+def review_details(request):
+    
+    if request.method == 'GET':
+    
+        details = []
+    
+        rooms = Room.objects.all()
+        for room in rooms:
+            id = room.id
+            
+            reviews = Review.objects.all().filter(room=id)
+            
+            count = len(reviews)
+            avg = 0
+            
+            if count != 0:
+                for review in reviews:
+                    avg += review.score
+                avg /= count
+                
+            details.append(
+                {'id':id, 
+                 'count':count, 
+                 'average':avg
+                }
+            )
+
+        return Response(details)
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
@@ -180,6 +302,47 @@ class MessageViewSet(viewsets.ModelViewSet):
 class RentViewSet(viewsets.ModelViewSet):
     queryset = Rent.objects.all()
     serializer_class = RentSerializer
+
+# XML views for exports
+class RoomXMLViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAdminUser]
+    renderer_classes = [XMLRenderer,]
+
+class RentXMLViewSet(viewsets.ModelViewSet):
+    queryset = Rent.objects.all()
+    serializer_class = RentSerializer
+    renderer_classes = [XMLRenderer,]
+
+class ReviewXMLViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    renderer_classes = [XMLRenderer,]
+    
+    def host_filter(self, r, host):
+        results = []
+        
+        for review in r:
+            owner = review.room.owner.id
+            if owner == int(host):
+                results.append(review)
+            
+        return results
+    
+    def get_queryset(self):
+        results = super().get_queryset()
+        
+        id = self.request.GET.get('id')
+        if id is not None and id != '':
+            results = results.filter(user=id)
+        
+        host = self.request.GET.get('host')
+        if host is not None and host != '':
+            results = self.host_filter(results, host)
+        
+        return results
 
 # -----------------------------------------------
 # Alternate ways for the views:

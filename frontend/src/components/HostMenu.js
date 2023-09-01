@@ -45,7 +45,7 @@ function HostMenu() {
                                 </div>
                                 <div className='col-lg-6 text-end'>
                                     {/* <button className='btn btn-secondary'>View</button> */}
-                                    <Link className='btn btn-secondary' role='button' to={`/rooms/${room.id}`}>View</Link>
+                                    <Link className='btn btn-secondary' role='button' to={`/host/${room.id}`}>View</Link>
                                 </div>
                             </div>
                         </div>
