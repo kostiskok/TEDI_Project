@@ -5,7 +5,9 @@ export default class APIService{
         const data = new FormData();
         data.append('username', username);
         data.append('password', password);
-        data.append('photo', photo);
+        if (photo != null){
+            data.append('photo', photo)
+        }
         data.append('first_name', first_name);
         data.append('last_name', last_name);
         data.append('email', email);
@@ -115,7 +117,9 @@ export default class APIService{
         const data = new FormData();
         data.append('name', name);
         data.append('desc', desc);
-        data.append('photo', photo)
+        if (photo != null){
+            data.append('photo', photo)
+        }
         data.append('owner', id);
         data.append('longitude', Number(long).toFixed(6));
         data.append('latitude', Number(lat).toFixed(6));
@@ -126,6 +130,7 @@ export default class APIService{
         data.append('price_per_day', price_per_day);
         data.append('price_per_person', price_per_person);
         data.append('max_num_people', maxperson);
+        data.append('rules', rules);
         data.append('num_of_beds', numbeds);
         data.append('num_of_bedrooms', numbedrooms);
         data.append('num_of_bathrooms', numbathrooms);
