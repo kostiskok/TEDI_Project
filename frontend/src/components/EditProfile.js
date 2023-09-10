@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import APIService from "../APIService";
+
+//apiservice line 51
 
 function EditProfile({ user, onCancelEdit }) {
   const [editedUser, setEditedUser] = useState({
     username: user.username,
     password: user.password,
+    first_name: user.first_name,
+    last_name: user.last_name,
     email: user.email,
     phone: user.phone,
   });
@@ -20,7 +25,6 @@ function EditProfile({ user, onCancelEdit }) {
   };
 
   const handleSaveChanges = () => {
-    //I have to check if there are any duplicates, then save the changes
   };
 
   return (
@@ -43,6 +47,26 @@ function EditProfile({ user, onCancelEdit }) {
             type="password"
             name="password"
             value={editedUser.password}
+            onChange={handleInputChange}
+          />
+        </label>
+        <br />
+        <label>
+          Username:
+          <input
+            type="text"
+            name="username"
+            value={editedUser.first_name}
+            onChange={handleInputChange}
+          />
+        </label>
+        <br />
+        <label>
+          Last:
+          <input
+            type="text"
+            name="username"
+            value={editedUser.last_name}
             onChange={handleInputChange}
           />
         </label>

@@ -64,6 +64,10 @@ export default class APIService{
         })
     }
 
+    // static updateUser(id,){
+
+    // }
+
     static getRooms(page, maxPerson, position, dateStart, dateEnd, type, maxcost, lr, wifi, ac, heating, stove, tv, parking, elevator){
 
         var maxPersonFilter = (maxPerson !== "" && maxPerson !== null) ? `&people=${maxPerson}` : ""
@@ -84,6 +88,15 @@ export default class APIService{
         var elevatorFilter = (elevator) ? "&elevator" : ""
 
         return fetch(`http://127.0.0.1:8000/airbnb/rooms/?page=${page}${maxPersonFilter}${latFilter}${longFilter}${dateStartFilter}${dateEndFilter}${typeFilter}${maxCostFilter}${lrFilter}${wifiFilter}${acFilter}${heatingFilter}${stoveFilter}${tvFilter}${parkingFilter}${elevatorFilter}`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
+    static getRoom(id){
+        return fetch(`http://127.0.0.1:8000/airbnb/rooms/${id}`, {
             'method': 'GET',
             headers: {
                 'Content-Type':'application/json',
