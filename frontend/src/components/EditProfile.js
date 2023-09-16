@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import APIService from "../APIService";
+import { useCookies } from "react-cookie";
 
 //apiservice line 51
 
+
 function EditProfile({ user, onCancelEdit }) {
+  
+  const [token, setToken] = useCookies(['mytoken'])
+
   const [editedUser, setEditedUser] = useState({
+    id: token.userid,
     username: user.username,
     password: user.password,
     first_name: user.first_name,
@@ -12,9 +18,6 @@ function EditProfile({ user, onCancelEdit }) {
     email: user.email,
     phone: user.phone,
   });
-
-  const [duplicateUsername, setDuplicateUsername] = useState(false);
-  const [duplicateEmail, setDuplicateEmail] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -25,6 +28,8 @@ function EditProfile({ user, onCancelEdit }) {
   };
 
   const handleSaveChanges = () => {
+    console.log(token['mytoken']);
+    APIService.updateUser(editedUser.id,editedUser.username,editedUser.password,editedUser.first_name,editedUser.last_name,editedUser.email,editedUser.phone,token['mytoken'])
   };
 
   return (
@@ -41,7 +46,7 @@ function EditProfile({ user, onCancelEdit }) {
           />
         </label>
         <br />
-        <label>
+        {/* <label>
           Password:
           <input
             type="password"
@@ -50,22 +55,22 @@ function EditProfile({ user, onCancelEdit }) {
             onChange={handleInputChange}
           />
         </label>
-        <br />
+        <br /> */}
         <label>
-          Username:
+          First Name:
           <input
             type="text"
-            name="username"
+            name="first_name"
             value={editedUser.first_name}
             onChange={handleInputChange}
           />
         </label>
         <br />
         <label>
-          Last:
+          Last Name:
           <input
             type="text"
-            name="username"
+            name="last_name"
             value={editedUser.last_name}
             onChange={handleInputChange}
           />

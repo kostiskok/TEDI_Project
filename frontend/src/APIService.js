@@ -64,9 +64,29 @@ export default class APIService{
         })
     }
 
-    // static updateUser(id,){
+    static updateUser(id,username, password, photo, first_name, last_name, email, phone,token){
 
-    // }
+            const data = new FormData();
+            data.append('username', username);
+            if (password != null){
+                data.append('password', password)
+            }
+            if (photo != null){
+                data.append('photo', photo)
+            }
+            data.append('first_name', first_name);
+            data.append('last_name', last_name);
+            data.append('email', email);
+            data.append('phone', phone);
+            fetch(`http://127.0.0.1:8000/airbnb/users/${id}/` , {
+                'method':'PATCH',
+                headers: {
+                    'Authorization':`Token ${token}`
+                },
+                body: data
+    
+            })
+    }
 
     static getRooms(page, maxPerson, position, dateStart, dateEnd, type, maxcost, lr, wifi, ac, heating, stove, tv, parking, elevator){
 

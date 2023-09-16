@@ -43,7 +43,9 @@ function Profile() {
           <div className='mb-3' key={user.sub}>
             <div className='row'>
               <div className='col-lg-4'>
-                <b>Photo will be here</b>
+                <br/>
+                <img src={user.photo} style={{maxWidth: '100%', maxHeight: '600px'}}/>
+                <br/>
               </div>
             </div>
 
@@ -53,11 +55,11 @@ function Profile() {
               </div>
             </div>
 
-            <div className='row'>
+            {/* <div className='row'>
               <div className='col-lg-4'>
                 <b>Password</b> {user.password}
               </div>
-            </div>
+            </div> */}
 
             <div className='row'>
               <div className='col-lg-4'>
