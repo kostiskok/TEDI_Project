@@ -51,7 +51,7 @@ export default class APIService{
     }
 
     static approveHostUser(id, token){
-        fetch(`http://127.0.0.1:8000/airbnb/users/${id}/`, {
+        return fetch(`http://127.0.0.1:8000/airbnb/users/${id}/`, {
             'method': 'PATCH',
             headers: {
                 'Content-Type':'application/json',
@@ -64,28 +64,20 @@ export default class APIService{
         })
     }
 
-    static updateUser(id,username, password, photo, first_name, last_name, email, phone,token){
+    static updateUser(id, first_name, last_name, email, phone, token){
 
-            const data = new FormData();
-            data.append('username', username);
-            if (password != null){
-                data.append('password', password)
-            }
-            if (photo != null){
-                data.append('photo', photo)
-            }
-            data.append('first_name', first_name);
-            data.append('last_name', last_name);
-            data.append('email', email);
-            data.append('phone', phone);
-            fetch(`http://127.0.0.1:8000/airbnb/users/${id}/` , {
-                'method':'PATCH',
-                headers: {
-                    'Authorization':`Token ${token}`
-                },
-                body: data
-    
-            })
+        const data = new FormData();
+        data.append('first_name', first_name);
+        data.append('last_name', last_name);
+        data.append('email', email);
+        data.append('phone', phone);
+        return fetch(`http://127.0.0.1:8000/airbnb/users/${id}/` , {
+            'method': 'PATCH',
+            headers: {
+                'Authorization':`Token ${token}`
+            },
+            body: data
+        }).then(resp => console.log(resp))
     }
 
     static getRooms(page, maxPerson, position, dateStart, dateEnd, type, maxcost, lr, wifi, ac, heating, stove, tv, parking, elevator){

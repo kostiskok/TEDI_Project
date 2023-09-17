@@ -7,12 +7,12 @@ import { useCookies } from "react-cookie";
 
 function EditProfile({ user, onCancelEdit }) {
   
-  const [token, setToken] = useCookies(['mytoken'])
+  const [token] = useCookies(['mytoken'])
+  const [userid] = useCookies(['userid'])
 
   const [editedUser, setEditedUser] = useState({
-    id: token.userid,
+    id: userid['userid'],
     username: user.username,
-    password: user.password,
     first_name: user.first_name,
     last_name: user.last_name,
     email: user.email,
@@ -28,8 +28,7 @@ function EditProfile({ user, onCancelEdit }) {
   };
 
   const handleSaveChanges = () => {
-    console.log(token['mytoken']);
-    APIService.updateUser(editedUser.id,editedUser.username,editedUser.password,editedUser.first_name,editedUser.last_name,editedUser.email,editedUser.phone,token['mytoken'])
+    APIService.updateUser(editedUser.id, editedUser.first_name, editedUser.last_name, editedUser.email, editedUser.phone, token['mytoken'])
   };
 
   return (
