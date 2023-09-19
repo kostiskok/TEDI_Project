@@ -80,6 +80,32 @@ export default class APIService{
         }).then(resp => console.log(resp))
     }
 
+    static updateRoom(id,num_of_beds,num_of_bathrooms,room_type,num_of_bedrooms,living_room,wifi,air_condition,heating,stove,television,parking,elevator,desc,rules,token){
+
+        const data = new FormData();
+        data.append('num_of_beds', num_of_beds);
+        data.append('num_of_bathrooms', num_of_bathrooms);
+        data.append('room_type', room_type);
+        data.append('num_of_bedrooms', num_of_bedrooms);
+        data.append('living_room', living_room);
+        data.append('wifi', wifi);
+        data.append('air_condition', air_condition);
+        data.append('heating', heating);
+        data.append('stove', stove);
+        data.append('television', television);
+        data.append('parking', parking);
+        data.append('elevator', elevator);
+        data.append('desc', desc);
+        data.append('rules', rules);
+        return fetch(`http://127.0.0.1:8000/airbnb/rooms/${id}/` , {
+            'method': 'PATCH',
+            headers: {
+                'Authorization':`Token ${token}`
+            },
+            body: data
+        }).then(resp => console.log(resp))
+    }
+
     static getRooms(page, maxPerson, position, dateStart, dateEnd, type, maxcost, lr, wifi, ac, heating, stove, tv, parking, elevator){
 
         var maxPersonFilter = (maxPerson !== "" && maxPerson !== null) ? `&people=${maxPerson}` : ""
