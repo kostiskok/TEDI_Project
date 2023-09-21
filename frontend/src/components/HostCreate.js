@@ -54,6 +54,159 @@ function HostCreate() {
     //State and function for the OpenStreet Map
     const [position, setPosition] = useState(null)
 
+    // Boolean flags for warnings/errors in create room
+    const [pressedOnce, setPressedOnce] = useState(false)
+
+    const [nameLegit, setNameLegit] = useState(false)
+    const [descLegit, setDescLegit] = useState(false)
+    const [addressLegit, setAddressLegit] = useState(false)
+    const [dateStartLegit, setDateStartLegit] = useState(false)
+    const [dateEndLegit, setDateEndLegit] = useState(false)
+    const [priceDayLegit, setPriceDayLegit] = useState(true)
+    const [pricePersonLegit, setPricePersonLegit] = useState(true)
+    const [maxPersonLegit, setMaxPersonLegit] = useState(true)
+    const [rulesLegit, setRulesLegit] = useState(false)
+    const [numBedsLegit, setNumBedsLegit] = useState(true)
+    const [numBedroomsLegit, setNumBedroomsLegit] = useState(true)
+    const [numBathroomsLegit, setNumBathroomsLegit] = useState(true)
+    const [typeLegit, setTypeLegit] = useState(false)
+    const [areaLegit, setAreaLegit] = useState(true)
+
+    useEffect(() => {
+        if (name === ''){
+            setNameLegit(false)
+        }
+        else{
+            setNameLegit(true)
+        }
+    }, [name])
+
+    useEffect(() => {
+        if (desc === ''){
+            setDescLegit(false)
+        }
+        else{
+            setDescLegit(true)
+        }
+    }, [desc])
+
+    useEffect(() => {
+        if (address === ''){
+            setAddressLegit(false)
+        }
+        else{
+            setAddressLegit(true)
+        }
+    }, [address])
+
+    useEffect(() => {
+        if (address === ''){
+            setAddressLegit(false)
+        }
+        else{
+            setAddressLegit(true)
+        }
+    }, [address])
+
+    useEffect(() => {
+        if (dateStart === ''){
+            setDateStartLegit(false)
+        }
+        else{
+            setDateStartLegit(true)
+        }
+    }, [dateStart])
+
+    useEffect(() => {
+        if (dateEnd === ''){
+            setDateEndLegit(false)
+        }
+        else{
+            setDateEndLegit(true)
+        }
+    }, [dateEnd])
+
+    useEffect(() => {
+        if (priceDay === ''){
+            setPriceDayLegit(false)
+        }
+        else{
+            setPriceDayLegit(true)
+        }
+    }, [priceDay])
+
+    useEffect(() => {
+        if (pricePerson === ''){
+            setPricePersonLegit(false)
+        }
+        else{
+            setPricePersonLegit(true)
+        }
+    }, [pricePerson])
+
+    useEffect(() => {
+        if (maxPerson === ''){
+            setMaxPersonLegit(false)
+        }
+        else{
+            setMaxPersonLegit(true)
+        }
+    }, [maxPerson])
+
+    useEffect(() => {
+        if (rules === ''){
+            setRulesLegit(false)
+        }
+        else{
+            setRulesLegit(true)
+        }
+    }, [rules])
+
+    useEffect(() => {
+        if (numBeds === ''){
+            setNumBedsLegit(false)
+        }
+        else{
+            setNumBedsLegit(true)
+        }
+    }, [numBeds])
+
+    useEffect(() => {
+        if (numBedrooms === ''){
+            setNumBedroomsLegit(false)
+        }
+        else{
+            setNumBedroomsLegit(true)
+        }
+    }, [numBedrooms])
+
+    useEffect(() => {
+        if (numBathrooms === ''){
+            setNumBathroomsLegit(false)
+        }
+        else{
+            setNumBathroomsLegit(true)
+        }
+    }, [numBathrooms])
+
+    useEffect(() => {
+        if (type === ''){
+            setTypeLegit(false)
+        }
+        else{
+            setTypeLegit(true)
+        }
+    }, [type])
+
+    useEffect(() => {
+        if (area === ''){
+            setAreaLegit(false)
+        }
+        else{
+            setAreaLegit(true)
+        }
+    }, [area])
+
     function LocationMarker(){
         const map = useMapEvents({
             click(e){
@@ -77,14 +230,121 @@ function HostCreate() {
         }
     }, [status])
   
+    // // const [nameLegit, setNameLegit] = useState(false)
+    // const [descLegit, setDescLegit] = useState(false)
+    // const [addressLegit, setAddressLegit] = useState(false)
+    // const [dateStartLegit, setDateStartLegit] = useState(false)
+    // const [dateEndLegit, setDateEndLegit] = useState(false)
+    // const [priceDayLegit, setPriceDayLegit] = useState(true)
+    // const [pricePersonLegit, setPricePersonLegit] = useState(true)
+    // const [maxPersonLegit, setMaxPersonLegit] = useState(true)
+    // const [rulesLegit, setRulesLegit] = useState(false)
+    // const [numBedsLegit, setNumBedsLegit] = useState(true)
+    // const [numBedroomsLegit, setNumBedroomsLegit] = useState(true)
+    // const [numBathroomsLegit, setNumBathroomsLegit] = useState(true)
+    // const [typeLegit, setTypeLegit] = useState(false)
+    // const [areaLegit, setAreaLegit] = useState(true)
+
     const createRoom = () => {
 
-        APIService.createRoom(token['mytoken'], userid['userid'], name, desc, photo, position.lng, position.lat, address, transportation, dateStart, dateEnd, 
-            priceDay, pricePerson, maxPerson, rules, numBeds, numBedrooms, numBathrooms, type, area, lr, wifi, ac, heating, stove, tv, parking, elevator)
-        .then(resp => console.log(resp))
-        .catch(error => console.log(error))
+        setPressedOnce(true)
 
-        navigate('/host/')
+        if (nameLegit && descLegit && addressLegit && dateStartLegit && dateEndLegit &&
+            priceDayLegit && pricePersonLegit && maxPersonLegit && rulesLegit && numBedsLegit &&
+            numBedroomsLegit && numBathroomsLegit && typeLegit && areaLegit){
+            APIService.createRoom(token['mytoken'], userid['userid'], name, desc, photo, position.lng, position.lat, address, transportation, dateStart, dateEnd, 
+                priceDay, pricePerson, maxPerson, rules, numBeds, numBedrooms, numBathrooms, type, area, lr, wifi, ac, heating, stove, tv, parking, elevator)
+            .then(resp => console.log(resp))
+            .catch(error => console.log(error))
+
+            navigate('/host/')
+        }
+        console.log('pressed')
+
+    }
+
+    const warnings = () => {
+
+        let nameLegitWarning;
+        let descLegitWarning;
+        let addressLegitWarning;
+        let dateStartLegitWarning;
+        let dateEndLegitWarning;
+        let priceDayLegitWarning;
+        let pricePersonLegitWarning;
+        let maxPersonLegitWarning;
+        let rulesLegitWarning;
+        let numBedsLegitWarning;
+        let numBedroomsLegitWarning;
+        let numBathroomsLegitWarning;
+        let typeLegitWarning;
+        let areaLegitWarning;
+
+        if (pressedOnce){
+            if (!nameLegit){
+                nameLegitWarning = <div>! Name is a required field</div>;
+            }
+            if (!descLegit){
+                descLegitWarning = <div>! Description is a required field</div>;
+            }
+            if (!addressLegit){
+                addressLegitWarning = <div>! Address is a required field</div>;
+            }
+            if (!dateStartLegit){
+                dateStartLegitWarning = <div>! Start Date is a required field</div>;
+            }
+            if (!dateEndLegit){
+                dateEndLegitWarning = <div>! End Date is a required field</div>;
+            }
+            if (!priceDayLegit){
+                priceDayLegitWarning = <div>! Price per day is a required field</div>;
+            }
+            if (!pricePersonLegit){
+                pricePersonLegitWarning = <div>! Price per person is a required field</div>;
+            }
+            if (!maxPersonLegit){
+                maxPersonLegitWarning = <div>! Max Num of people is a required field</div>;
+            }
+            if (!rulesLegit){
+                rulesLegitWarning = <div>! Rules is a required field</div>;
+            }
+            if (!numBedsLegit){
+                numBedsLegitWarning = <div>! Num of Beds is a required field</div>;
+            }
+            if (!numBedroomsLegit){
+                numBedroomsLegitWarning = <div>! Num of Bedrooms is a required field</div>;
+            }
+            if (!numBathroomsLegit){
+                numBathroomsLegitWarning = <div>! Num of Bathrooms is a required field</div>;
+            }
+            if (!typeLegit){
+                typeLegitWarning = <div>! Type is a required field</div>;
+            }
+            if (!areaLegit){
+                areaLegitWarning = <div>! Area is a required field</div>;
+            }
+        }
+
+        return(
+            <div className="text-danger mt-2">
+                <b>
+                    {nameLegitWarning}
+                    {descLegitWarning}
+                    {addressLegitWarning}
+                    {dateStartLegitWarning}
+                    {dateEndLegitWarning}
+                    {priceDayLegitWarning}
+                    {pricePersonLegitWarning}
+                    {maxPersonLegitWarning}
+                    {rulesLegitWarning}
+                    {numBedsLegitWarning}
+                    {numBedroomsLegitWarning}
+                    {numBathroomsLegitWarning}
+                    {typeLegitWarning}
+                    {areaLegitWarning}
+                </b>
+            </div>
+        )
 
     }
 
@@ -290,6 +550,8 @@ function HostCreate() {
         <div className='text-end'>
             <button className='btn btn-success col-6' onClick={createRoom}>Create</button>
         </div>
+
+        {warnings()}        
         
 
     </div>
