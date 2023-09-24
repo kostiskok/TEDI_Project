@@ -242,6 +242,32 @@ export default class APIService{
         }).then(resp => resp.json())
     }
 
+    static getReviewsByRoom(id){
+        return fetch(`http://127.0.0.1:8000/airbnb/reviews?room=${id}`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
+    static addReview(user,room,score,review_text,date,token){
+        const data = new FormData();
+        data.append('user', user);
+        data.append('room', room);
+        data.append('score', score);
+        data.append('review_text', review_text);
+        data.append('date', date);
+
+        return fetch(`http://127.0.0.1:8000/airbnb/reviews`, {
+            'method': 'POST',
+            headers: {
+                'Authorization':`Token ${token}`
+            },
+            body : data
+        }).then(resp => resp.json())
+    }
+
     static getBookings(){
         return fetch('http://127.0.0.1:8000/airbnb/bookings', {
             headers: {

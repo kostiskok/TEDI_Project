@@ -14,6 +14,21 @@ function Room() {
     const [dateStart, setDateStart] = useState('')
     const [dateEnd, setDateEnd] = useState('')
     const [bookingResult, setBookingResult] = useState(null)
+    const roomTypeMapping = {
+      'p': 'Private',
+      'h': 'House',
+      's': 'Share',
+    };
+    const [review, setReview] = useState({
+      comment: "",
+      rating: 5, // Default rating
+    });
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+    const day = currentDate.getDate();
+    const formattedDate = `${year}-${month}-${day}`;
 
     // Change the var isLogged when the user logs
     useEffect(() => {
@@ -36,6 +51,27 @@ function Room() {
         .then(resp => setUser(resp))
         .catch(error => console.log(error))
     }, [])
+
+
+    const handleInputChange = (event) => {
+      const { name, value } = event.target;
+      setReview((prevReview) => ({
+        ...prevReview,
+        [name]: value,
+      }));
+    };
+  
+    const handleRatingChange = (event) => {
+      const { name, value } = event.target;
+      setReview((prevReview) => ({
+        ...prevReview,
+        [name]: parseInt(value, 10),
+      }));
+    };
+    
+    const ReviewBtn = () => {
+      APIService.addReview(user.username,room.name,review.rating,review.comment,formattedDate,token['mytoken'])
+    };
 
     const handleCheckDates = () => {
       if (dateStart && dateEnd) {
@@ -72,7 +108,7 @@ function Room() {
             <div className='col-lg-4'>
               <b>Number of beds:</b> {room.num_of_beds} <br />
               <b>Number of bathrooms:</b> {room.num_of_bathrooms} <br />
-              <b>Type of rented space:</b> {room.room_type} <br />
+              <b>Type of rented space:</b> {roomTypeMapping[room.room_type]} <br />
               <b>Number of bedrooms:</b> {room.num_of_bedrooms} <br />
               <b>Living room:</b> {room.living_room} <br />
               <b>Space area:</b> {room.area} <br />
@@ -107,9 +143,59 @@ function Room() {
           <div className='row'>
             <div className='col-lg-4'>
               <b>Photo of owner here:</b> <br />
-              <b>Reviews will be here:</b> <br />
             </div>
           </div>
+
+          <div className='row'>
+            <div className='col-lg-4'>
+            <p style={{ fontSize: '24px',textDecoration: 'underline' }}> <b> Reviews:</b> </p>
+            </div>
+          </div>
+
+          <div className='row'>
+            <div className='col-lg-4'>
+              <b>Reviews will be here</b> <br />
+            </div>
+          </div>
+
+          <div className="row">
+          <div className="col-lg-4">
+            <h3>Write your review for this room</h3>
+            <form>
+              <div className="mb-3">
+                <label htmlFor="comment">Comment:</label>
+                <textarea
+                  className="form-control"
+                  id="comment"
+                  name="comment"
+                  value={review.comment}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="rating">Rating:</label>
+                <select
+                  className="form-control"
+                  id="rating"
+                  name="rating"
+                  value={review.rating}
+                  onChange={handleRatingChange}
+                  required
+                >
+                  <option value="5">5 stars</option>
+                  <option value="4">4 stars</option>
+                  <option value="3">3 stars</option>
+                  <option value="2">2 stars</option>
+                  <option value="1">1 star</option>
+                </select>
+              </div>
+              <button onClick={ReviewBtn} className="btn btn-primary">Post review</button>
+            </form>
+          </div>
+        </div>
+
+
 
           <div className='row'>
             <div className='col-lg-4'>

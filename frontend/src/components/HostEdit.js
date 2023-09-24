@@ -83,12 +83,15 @@ function HostEdit() {
         <br />
         <label>
           Type of rented space:
-          <input
-            type="text"
+          <select
             name="room_type"
             value={room.room_type}
             onChange={handleInputChange}
-          />
+          >
+            <option value="p">Private</option>
+            <option value="h">House</option>
+            <option value="s">Share</option>
+          </select>
         </label>
         <br />
         <label>
