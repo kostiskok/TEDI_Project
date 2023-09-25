@@ -262,6 +262,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
         if host is not None and host != '':
             results = self.host_filter(results, host)
         
+        room = self.request.GET.get('room')
+        if room is not None and room != '':
+            results = results.filter(room=room)
+        
         return results
         
 

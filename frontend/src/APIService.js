@@ -259,7 +259,7 @@ export default class APIService{
         data.append('review_text', review_text);
         data.append('date', date);
 
-        return fetch(`http://127.0.0.1:8000/airbnb/reviews`, {
+        return fetch(`http://127.0.0.1:8000/airbnb/reviews/`, {
             'method': 'POST',
             headers: {
                 'Authorization':`Token ${token}`
