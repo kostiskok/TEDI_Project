@@ -209,7 +209,8 @@ function Rooms() {
                                             
                                                 <div className="col-lg-6">
                                                     <h3 className="text-center">{item.price_per_day}$/day</h3>
-                                                    <Link className='btn btn-success btn-lg col-12' role="button" to={`/rooms/${item.id}`}>View</Link>
+                                                    <Link className='btn btn-success btn-lg col-12' role="button" 
+                                                    to={`/rooms/${item.id}`} state={{dateStart: dateStart, dateEnd: dateEnd}}>View</Link>
                                                 </div>
                                             </div>
                                         </div>

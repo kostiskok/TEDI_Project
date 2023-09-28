@@ -1,11 +1,15 @@
 import React, {useState, useEffect} from "react";
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { useCookies } from "react-cookie";
 import APIService from "../APIService";
 
 function Room() {
 
     const { id } = useParams()
+
+    const location = useLocation();
+    const dateStartArg = location.state && location.state.dateStart;
+    const dateEndArg = location.state && location.state.dateEnd;
 
     const [userid] = useCookies(['userid'])
     const [room, setRoom] = useState([])
@@ -105,7 +109,9 @@ function Room() {
         .catch((error) => console.log(error));
     }, []);
     
-
+    const RentRoom = (dateStart, dateEnd) => {
+      APIService.addBooking(userid['userid'], id, dateStart, dateEnd, token['mytoken'])
+    }
 
     const handleInputChange = (event) => {
       const { name, value } = event.target;
@@ -124,7 +130,7 @@ function Room() {
     };
     
     const ReviewBtn = () => {
-      APIService.addReview(user.id,id,review.rating,review.comment,formattedDate,token['mytoken'])
+      APIService.addReview(userid['userid'],id,review.rating,review.comment,formattedDate,token['mytoken'])
       review.comment=""
       review.rating=10
     };
@@ -312,23 +318,30 @@ function Room() {
             </div>
           </div>
 
-          <div className="row mb-3">
-            <div className='col-lg-1. '>
-                <label htmlFor='transportation' className='form-label'>Starting Date</label>
-            </div>
-            <div className='col-lg-2'>
-                <input type='date' className='form-control' value={dateStart} onChange={e => setDateStart(e.target.value)}/>
-            </div>
-            <div className='col-lg-1.'>
-                <label htmlFor='transportation' className='form-label'>End Date</label>
-            </div>
-            <div className='col-lg-2'>
-                <input type='date' className='form-control' value={dateEnd} onChange={e => setDateEnd(e.target.value)}/>
-            </div>
-            <div className='col-lg-2'>
-              <button className="btn btn-primary" onClick={handleCheckDates}>Check Dates</button>
-            </div>
+          {dateStartArg != null && dateEndArg != null 
+          ? 
+          <div>
+            <button className="btn btn-primary" onClick={() => RentRoom(dateStartArg, dateEndArg)}>Rent</button>
           </div>
+          :
+            <div className="row mb-3">
+              <div className='col-lg-1. '>
+                  <label htmlFor='transportation' className='form-label'>Starting Date</label>
+              </div>
+              <div className='col-lg-2'>
+                  <input type='date' className='form-control' value={dateStart} onChange={e => setDateStart(e.target.value)}/>
+              </div>
+              <div className='col-lg-1.'>
+                  <label htmlFor='transportation' className='form-label'>End Date</label>
+              </div>
+              <div className='col-lg-2'>
+                  <input type='date' className='form-control' value={dateEnd} onChange={e => setDateEnd(e.target.value)}/>
+              </div>
+              <div className='col-lg-2'>
+                <button className="btn btn-primary" onClick={handleCheckDates}>Check Dates</button>
+              </div>
+            </div>
+          }
 
           {bookingResult && (
           <div className="row">

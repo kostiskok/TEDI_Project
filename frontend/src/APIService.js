@@ -276,6 +276,25 @@ export default class APIService{
         }).then(resp => resp.text())
     } 
 
+    static addBooking(renter, room_id, dateStart, dateEnd, token){
+        const data = new FormData();
+
+        console.log(renter)
+
+        data.append('renter', renter)
+        data.append('room_id', room_id)
+        data.append('date_start', dateStart)
+        data.append('date_end', dateEnd)
+
+        return fetch(`http://127.0.0.1:8000/airbnb/bookings/`, {
+            method: 'POST',
+            headers: {
+                'Authorization':`Token ${token}`
+            },
+            body: data
+        }).then(resp => resp.json()) 
+    }
+
     // XML Requests
     static adminRoomsXML(token){
         return fetch(`http://127.0.0.1:8000/airbnb/roomxml/`, {

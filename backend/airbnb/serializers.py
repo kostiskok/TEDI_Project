@@ -67,7 +67,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class RentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rent
-        fields=['id','room_id','date_start','date_end']
+        fields=['renter','room_id','date_start','date_end']
         
 
 
