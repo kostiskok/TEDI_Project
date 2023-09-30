@@ -142,6 +142,18 @@ export default class APIService{
         }).then(resp => resp.json())
     }
 
+    static checkRoom(id, dateStart, dateEnd){
+
+        return fetch(`http://127.0.0.1:8000/airbnb/rooms/?id=${id}&dateStart=${dateStart}&dateEnd=${dateEnd}`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        })
+        .then(resp => resp.json)
+
+    }
+
     static hostRooms(token){
         return fetch(`http://127.0.0.1:8000/airbnb/roomhost/`, {
             'method': 'GET',

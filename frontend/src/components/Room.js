@@ -32,6 +32,8 @@ function Room() {
 
     const [reviews,setReviews]= useState([''])
 
+    const [count, setCount] = useState(-1)
+
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1; // Months are zero-based, so add 1
@@ -135,11 +137,14 @@ function Room() {
       review.rating=10
     };
 
-    const handleCheckDates = () => {
+    const handleCheckDates = async () => {
       if (dateStart && dateEnd) {
         // Check if you can book the room during those days
         const isValidBooking = true;
-  
+        APIService.checkRoom(id, dateStart, dateEnd)
+        .then(resp => setCount(resp.count));
+        // console.log(isValidBooking)
+
         if (isValidBooking) {
           setBookingResult("Booking is available!");
         } else {
@@ -342,6 +347,17 @@ function Room() {
               </div>
             </div>
           }
+
+          {count === 1 ?
+          (
+            <div>
+              <p>good</p>
+            </div>
+          )
+        : <div>
+            <p> not good</p>
+          </div>
+        }
 
           {bookingResult && (
           <div className="row">

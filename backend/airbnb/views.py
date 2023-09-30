@@ -179,6 +179,8 @@ class RoomViewSet(viewsets.ModelViewSet):
         dateStart = self.request.GET.get('dateStart')
         dateEnd = self.request.GET.get('dateEnd')
         
+        id = self.request.GET.get('id')
+        
         if maxcost is not None and maxcost != '':
             results = results.filter(price_per_day__lte=maxcost)
         
@@ -215,6 +217,9 @@ class RoomViewSet(viewsets.ModelViewSet):
         
         if lat is not None and lat != '' and lon is not None and lon != '':
             results = self.locationFilter(results, decimal.Decimal(lat), decimal.Decimal(lon))
+        
+        if id is not None and id != '':
+            results = results.filter(id=id)
         
         if dateStart is not None and dateStart != '' and dateEnd is not None and dateEnd != '':
             results = self.isAvailable(results, datetime.strptime(dateStart, '%Y-%m-%d').date(), datetime.strptime(dateEnd, '%Y-%m-%d').date())
