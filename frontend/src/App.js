@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import './App.css';
 // import ArticleList from './components/ArticleList';
 // import Form from './components/Form';
@@ -28,6 +28,7 @@ function App() {
     const [dateStart, setDateStart] = useState('')
     const [dateEnd, setDateEnd] = useState('')
     const [maxPerson, setMaxPerson] = useState(2)
+    const [isLogged, setLogged] = useState(false)
 
     //State and function for the OpenStreet Map
     const [position, setPosition] = useState(null)
@@ -44,6 +45,14 @@ function App() {
             <Marker position={position}/>
         )
     }
+    useEffect(() => {
+        if(token['mytoken']){
+            setLogged(true)
+        }
+        else{
+        setLogged(false)
+        }
+    }, [token])
 
   return (
     <div className="container">
@@ -98,7 +107,23 @@ function App() {
             </div>
 
         </div>
-
+        {isLogged
+            ?
+            <div className="bg-light p-4 mt-4">
+                <h2>Recommended Rooms logged in</h2>
+                <div className="row">
+                    {/* Map your recommended rooms data here */}
+                </div>
+            </div>
+            :(
+            <div className="bg-light p-4 mt-4">
+                <h2>Recommended Rooms logged out</h2>
+                <div className="row">
+                    {/* Map your recommended rooms data here */}
+                </div>
+            </div>
+            )
+        }
         
     </div>
   );

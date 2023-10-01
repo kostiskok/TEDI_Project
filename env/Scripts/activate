@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\kostis\Desktop\TEDI_Project\env"
+VIRTUAL_ENV="C:\Users\Bill\Desktop\TEDI project\TEDI_Project\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

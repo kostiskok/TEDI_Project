@@ -54,7 +54,7 @@ function HostEdit() {
   };
 
   const handleSaveChanges = () => {
-    APIService.updateRoom(id,room.num_of_beds,room.num_of_bathrooms,room.room_type,room.num_of_bedrooms,room.living_room,room.wifi,room.air_condition,room.heating,room.stove,room.television,room.parking,room.elevator,room.desc,room.rules,token['mytoken'])
+    APIService.updateRoom(id,room.num_of_beds,room.num_of_bathrooms,room.room_type,room.num_of_bedrooms,room.living_room,room.wifi,room.air_condition,room.heating,room.stove,room.television,room.parking,room.elevator,room.desc,room.rules,room.area,token['mytoken'])
   };
 
   return (
@@ -208,6 +208,16 @@ function HostEdit() {
             type="text"
             name="rules"
             value={room.rules}
+            onChange={handleInputChange}
+          />
+        </label>
+        <br />
+        <label>
+          Room area: 
+          <input
+            type="text"
+            name="area"
+            value={room.area}
             onChange={handleInputChange}
           />
         </label>

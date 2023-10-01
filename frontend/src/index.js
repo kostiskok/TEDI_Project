@@ -16,6 +16,7 @@ import AdminMenu from './components/AdminMenu';
 import HostMenu from './components/HostMenu';
 import HostCreate from './components/HostCreate';
 import HostEdit from './components/HostEdit';
+import Messages from './components/Messages';
 
 function Router() {
 
@@ -39,6 +40,7 @@ function Router() {
         <Route exact path = '/host/' element = {<HostMenu />}/>
         <Route exact path = '/host/create/' element = {<HostCreate />}/>
         <Route exact path = '/host/:id/' element = {<HostEdit />}/>
+        <Route exact path = '/messages/:id/' element = {<Messages />}/>
       </Routes>
     </BrowserRouter>
 
