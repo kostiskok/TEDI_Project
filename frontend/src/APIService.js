@@ -151,7 +151,7 @@ export default class APIService{
                 'Content-Type':'application/json',
             }
         })
-        .then(resp => resp.json)
+        .then(resp => resp.json())
 
     }
 
@@ -291,9 +291,6 @@ export default class APIService{
 
     static addBooking(renter, room_id, dateStart, dateEnd, token){
         const data = new FormData();
-
-        console.log(renter)
-
         data.append('renter', renter)
         data.append('room_id', room_id)
         data.append('date_start', dateStart)

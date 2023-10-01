@@ -140,9 +140,10 @@ function Room() {
     const handleCheckDates = async () => {
       if (dateStart && dateEnd) {
         // Check if you can book the room during those days
-        const isValidBooking = true;
+        var isValidBooking = true;
         APIService.checkRoom(id, dateStart, dateEnd)
         .then(resp => setCount(resp.count));
+        isValidBooking = (count === 1);
         // console.log(isValidBooking)
 
         if (isValidBooking) {
@@ -351,12 +352,10 @@ function Room() {
           {count === 1 ?
           (
             <div>
-              <p>good</p>
+              <button className="btn btn-primary" onClick={() => RentRoom(dateStart, dateEnd)}>Rent</button>
             </div>
           )
-        : <div>
-            <p> not good</p>
-          </div>
+        : null
         }
 
           {bookingResult && (
