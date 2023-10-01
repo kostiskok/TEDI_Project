@@ -21,6 +21,7 @@ from users.models import CustomUser
 
 import decimal
 from datetime import datetime
+from .recommendation import get_user_recommendations
 
 # Custom Permissions
 
@@ -303,6 +304,15 @@ def review_details(request):
             )
 
         return Response(details)
+    
+@api_view(['GET'])
+def room_recommendations(request):
+    if request.method == 'GET':
+        user_id = request.user.id  # Assuming you have user authentication
+        recommendations = get_user_recommendations(user_id)
+
+        # You can return the recommendations as JSON or render them in a template
+        return Response({'recommendations': recommendations})
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()

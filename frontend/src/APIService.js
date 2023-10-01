@@ -80,7 +80,7 @@ export default class APIService{
         }).then(resp => console.log(resp))
     }
 
-    static updateRoom(id,num_of_beds,num_of_bathrooms,room_type,num_of_bedrooms,living_room,wifi,air_condition,heating,stove,television,parking,elevator,desc,rules,token){
+    static updateRoom(id,num_of_beds,num_of_bathrooms,room_type,num_of_bedrooms,living_room,wifi,air_condition,heating,stove,television,parking,elevator,desc,rules,area,token){
 
         const data = new FormData();
         data.append('num_of_beds', num_of_beds);
@@ -97,6 +97,7 @@ export default class APIService{
         data.append('elevator', elevator);
         data.append('desc', desc);
         data.append('rules', rules);
+        data.append('area',area);
         return fetch(`http://127.0.0.1:8000/airbnb/rooms/${id}/` , {
             'method': 'PATCH',
             headers: {

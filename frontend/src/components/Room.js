@@ -179,7 +179,7 @@ function Room() {
               <b>Number of bathrooms:</b> {room.num_of_bathrooms} <br />
               <b>Type of rented space:</b> {roomTypeMapping[room.room_type]} <br />
               <b>Number of bedrooms:</b> {room.num_of_bedrooms} <br />
-              <b>Living room:</b> {room.living_room} <br />
+              <b>Living room:</b> {room.living_room ? "Has a living room" : "Doesn't have a living room"} <br />
               <b>Space area:</b> {room.area} <br />
             </div>
           </div>

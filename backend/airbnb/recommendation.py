@@ -35,7 +35,7 @@ def get_user_recommendations(user_id):
         sorted_details = sorted(details, key=lambda x: x['average'], reverse=True)[:6]
 
         top_room_ids = [room['id'] for room in sorted_details]
-        
+
         print(top_room_ids)
         return top_room_ids
     else:
@@ -156,6 +156,6 @@ if run_matrix_factorization:
     rmse_value = rmse(R, R_pred)
     print(f"RMSE:{rmse_value}")
     run_matrix_factorization = False
-    get_user_recommendations(None)
+    get_user_recommendations(1)
 else:
     print("Matrix factorization skipped")
