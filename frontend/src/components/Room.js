@@ -224,12 +224,6 @@ function Room() {
 
           <div className='row'>
             <div className='col-lg-4'>
-              Message button will be here
-            </div>
-          </div>
-
-          <div className='row'>
-            <div className='col-lg-4'>
             <p style={{ fontSize: '24px',textDecoration: 'underline' }}> <b> Reviews:</b> </p>
             </div>
           </div>
@@ -305,20 +299,8 @@ function Room() {
                 </div>
                 <button onClick={ReviewBtn} className="btn btn-primary">Post review</button>
               </div>
-            </div>
-          :
-          (
-            <div className="row">
-              <div className="col-lg-4">
-                <p>Please log in to post a review.</p>
-              </div>
-            </div>
-          )
-        }
 
-
-
-          <div className='row'>
+              <div className='row'>
             <div className='col-lg-4'>
             <p style={{ fontSize: '24px',textDecoration: 'underline' }}> <b> Rent this room:</b> </p>
             </div>
@@ -367,6 +349,20 @@ function Room() {
 
           //Add another button here that pops up when the room is available to confirm the booking and update the database
         )}
+            </div>
+          :
+          (
+            <div className="row">
+              <div className="col-lg-4">
+                <p>Please log in to post a review and rent.</p>
+              </div>
+            </div>
+          )
+        }
+
+
+
+          
 
           <br />
         </div>
