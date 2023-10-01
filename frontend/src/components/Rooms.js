@@ -204,7 +204,7 @@ function Rooms() {
                                                         <li>Num of beds: {item.num_of_beds}</li>
                                                         <li>Num of reviews: {item.id === review.id ? review.count : null}</li>
                                                     </ul>
-                                                    <h4> {review.count === 0 ? <div>No Score Yet</div> : <div>{review.average/2}/5 stars</div>}</h4>
+                                                    <h4> {review.count === 0 ? <div>No Score Yet</div> : <div>{(review.average/2).toFixed(2)}/5 stars</div>}</h4>
                                                 </div>
                                             
                                                 <div className="col-lg-6">

@@ -44,7 +44,7 @@ def get_user_recommendations(user_id):
         Recommendation_array=np.dot(loaded_P, loaded_Q.T)
 
         user_ratings = Recommendation_array[user_id-1]
-        top_rooms = np.argsort(user_ratings)[::-1][:6]
+        top_rooms = (np.argsort(user_ratings)[::-1][:6])+1
         print(top_rooms)
         return top_rooms
 
@@ -89,14 +89,12 @@ def matrix_factorization(R, P, Q, K, steps, alpha , beta):
                     for k in range(K):
                         error += (beta / 2) * (P[i][k] ** 2 + Q[k][j] ** 2)
 
-        # Termination condition (you can modify this condition)
         if error < 0.001:
             break
 
     return P, Q.T  # Transpose Q back
 
 if run_matrix_factorization:
-    # Step 1: Generate a synthetic user-item interaction matrix R (replace this with your actual data)
     print("test")
     User = get_user_model()
     users = User.objects.all()
@@ -114,13 +112,12 @@ if run_matrix_factorization:
             print(f"Testing :{user.id},{room.id}")
 
     for review in reviews:
-        user_index = review.user.id  # Assuming 'id' is the user ID field in your CustomUser model
-        room_index = review.room.id  # Assuming 'id' is the room ID field in your Room model
+        user_index = review.user.id
+        room_index = review.room.id
         R[user_index-1][room_index-1] = (review.score-1)/(9)
     
     print(R)
 
-    # Step 2: Initialize user and item matrices P and Q (replace with your initialization method)
     K = 4 # Number of latent factors
     P = np.random.rand(num_users, K).round(2)
     Q = np.random.rand(num_rooms, K).round(2)
@@ -129,7 +126,6 @@ if run_matrix_factorization:
     print("Matrix Q:")
     print(Q)
 
-    # Step 3: Call matrix_factorization function
     P, Q = matrix_factorization(R, P, Q, K, steps=1000, alpha=0.02, beta=0.01)
 
     file_P = 'matrix_P.npy'
@@ -146,16 +142,15 @@ if run_matrix_factorization:
 
     R_pred = np.dot(P, Q.T)  # Predicted user-item interaction matrix
 
-    # Calculate RMSE as an evaluation metric (replace this with your preferred metric)
     def rmse(true, pred):
         return np.sqrt(np.mean((true - pred) ** 2))
 
-    print(f"my_array :{R_pred}")
+    print(f"my_array:{R_pred}")
     print("Row of R_pred :")
     print(R_pred[0, :])
     rmse_value = rmse(R, R_pred)
     print(f"RMSE:{rmse_value}")
     run_matrix_factorization = False
-    get_user_recommendations(1)
+    get_user_recommendations(None)
 else:
     print("Matrix factorization skipped")

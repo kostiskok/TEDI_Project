@@ -26,8 +26,9 @@ router.register('bookingsxml', RentXMLViewSet)
 
 urlpatterns = [
     path('airbnb/', include(router.urls)), 
-    path('airbnb/details', review_details)
-    
+    path('airbnb/details', review_details),
+    path('airbnb/recommendation/<int:id>/',room_recommendations),
+    path('airbnb/recommendation/',room_recommendations)
 ]
 
 # For alternate views, urlpatterns may be:

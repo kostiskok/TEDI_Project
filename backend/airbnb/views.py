@@ -226,6 +226,16 @@ class RoomViewSet(viewsets.ModelViewSet):
             results = self.isAvailable(results, datetime.strptime(dateStart, '%Y-%m-%d').date(), datetime.strptime(dateEnd, '%Y-%m-%d').date())
         
         return results
+    
+    def get_all_rooms(self, request):
+        # Fetch all rooms from the database
+        results = Room.objects.all()
+
+        # Serialize the queryset to JSON or any other desired format
+        serializer = RoomSerializer(results, many=True)
+
+        return Response(serializer.data)
+    
 
 class RoomHostViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
@@ -306,13 +316,10 @@ def review_details(request):
         return Response(details)
     
 @api_view(['GET'])
-def room_recommendations(request):
+def room_recommendations(request,id=None):
     if request.method == 'GET':
-        user_id = request.user.id  # Assuming you have user authentication
-        recommendations = get_user_recommendations(user_id)
-
-        # You can return the recommendations as JSON or render them in a template
-        return Response({'recommendations': recommendations})
+        recommendations = get_user_recommendations(id)
+        return Response(recommendations)
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()

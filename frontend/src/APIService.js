@@ -143,6 +143,15 @@ export default class APIService{
         }).then(resp => resp.json())
     }
 
+    static getAllRooms(){
+        return fetch(`http://127.0.0.1:8000/airbnb/rooms/`, {
+            'method': 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            }
+        }).then(resp => resp.json())
+    }
+
     static checkRoom(id, dateStart, dateEnd){
 
         return fetch(`http://127.0.0.1:8000/airbnb/rooms/?id=${id}&dateStart=${dateStart}&dateEnd=${dateEnd}`, {
@@ -303,6 +312,15 @@ export default class APIService{
             },
             body: data
         }).then(resp => resp.json()) 
+    }
+
+    static getRecommendations(id) {
+        const url = id ? `http://127.0.0.1:8000/airbnb/recommendation/${id}` : 'http://127.0.0.1:8000/airbnb/recommendation';
+        return fetch(url, {
+            headers: {
+                'Content-Type': 'application/xml',
+            },
+        }).then(resp => resp.json());
     }
 
     // XML Requests
